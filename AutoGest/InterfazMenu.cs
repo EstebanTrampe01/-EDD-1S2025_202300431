@@ -5,15 +5,15 @@ using Usuarios;
 using Repuestos;
 using Vehiculos;
 using Facturas;
+using Servicios;
 
 public class InterfazMenu : Window
 {
     private ListaSimple<Usuario> listaUsuarios;
     private ListaCircular listaRepuestos;
     private ListaDoblementeEnlazada listaVehiculos;
-
     private Pila pilaFacturas;
-
+    private Cola colaServicios; // Añadir una instancia de Cola
 
     public InterfazMenu() : base("Menu")
     {
@@ -25,6 +25,7 @@ public class InterfazMenu : Window
         listaRepuestos = new ListaCircular();
         listaVehiculos = new ListaDoblementeEnlazada();
         pilaFacturas = new Pila();
+        colaServicios = new Cola(); // Inicializar la instancia de Cola
 
         // Crear un contenedor para los elementos
         VBox vbox = new VBox();
@@ -49,7 +50,7 @@ public class InterfazMenu : Window
         Button button3 = new Button("Gestión de Usuarios");
         button3.Clicked += delegate { 
             Console.WriteLine("Opción 3 seleccionada"); 
-            InterfazGU interfazGU = new InterfazGU(listaUsuarios);
+            InterfazGU interfazGU = new InterfazGU(listaUsuarios, listaVehiculos);
             interfazGU.ShowAll();
         };
         vbox.PackStart(button3, true, true, 10); // Margen de 10
@@ -57,7 +58,7 @@ public class InterfazMenu : Window
         Button button4 = new Button("Generar Servicios");
         button4.Clicked += delegate { 
             Console.WriteLine("Opción 4 seleccionada"); 
-            InterfazGS interfazGS = new InterfazGS(listaRepuestos, listaVehiculos, pilaFacturas);
+            InterfazGS interfazGS = new InterfazGS(listaRepuestos, listaVehiculos, pilaFacturas, colaServicios);
             interfazGS.ShowAll();
         };
         vbox.PackStart(button4, true, true, 10); // Margen de 10

@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
-using Vehiculos;
+using System.IO;
+using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Vehiculos
 {
@@ -37,6 +40,11 @@ namespace Vehiculos
                 nuevoNodo->Prev = tail;
                 tail = nuevoNodo;
             }
+
+            // Llamar a la función para generar el gráfico
+            GenerarGrafico("Vehiculos.dot");
+                        GenerarTopVehiculosAntiguos(5); // Puedes cambiar el número 5 por el número de vehículos que quieras en el top
+
         }
 
         public void Eliminar(int id)
@@ -116,6 +124,132 @@ namespace Vehiculos
                 Console.WriteLine(actual->Data.ToString());
                 actual = actual->Prev;
             }
+        }
+
+        public void GenerarGrafico(string fileName)
+        {
+            string contenido = "digraph G {\n";
+            contenido += "rankdir=LR;\n"; // Orientación horizontal
+            contenido += "node [shape=record];\n";
+            contenido += "splines=false;\n"; // Flechas rectas
+
+            Nodo<Vehiculo>* temp = head;
+            int index = 0;
+            while (temp != null)
+            {
+                Vehiculo* vehiculo = &temp->Data;
+                contenido += $"node{index} [label=\"ID: {vehiculo->Id} \\n ID Usuario: {vehiculo->ID_Usuario} \\n Marca: {GetFixedString(vehiculo->Marca)} \\n Modelo: {vehiculo->Modelo} \\n Placa: {GetFixedString(vehiculo->Placa)}\"];\n";
+
+                if (temp->Next != null)
+                {
+                    contenido += $"node{index} -> node{index + 1} [dir=forward];\n";
+                    contenido += $"node{index} -> node{index + 1} [dir=back];\n";
+                }
+                temp = temp->Next;
+                index++;
+            }
+
+            contenido += "}\n";
+
+            // Generar el archivo .dot en la carpeta "reports"
+            GenerarArchivoDot(fileName, contenido);
+
+            // Generar el archivo PNG usando Graphviz
+            var process = new Process();
+            process.StartInfo.FileName = "dot";
+            process.StartInfo.Arguments = $"-Tpng {Path.Combine(Directory.GetCurrentDirectory(), "reports", fileName)} -o {Path.Combine(Directory.GetCurrentDirectory(), "reports", Path.ChangeExtension(fileName, ".png"))}";
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
+            process.WaitForExit();
+        }
+
+        public void GenerarTopVehiculosAntiguos(int topN)
+        {
+            List<Vehiculo> vehiculos = new List<Vehiculo>();
+            Nodo<Vehiculo>* temp = head;
+            while (temp != null)
+            {
+                vehiculos.Add(temp->Data);
+                temp = temp->Next;
+            }
+
+            var vehiculosAntiguos = vehiculos.OrderBy(v => v.Modelo).Take(topN).ToList();
+
+            string contenido = "digraph G {\n";
+            contenido += "rankdir=LR;\n"; // Orientación horizontal
+            contenido += "node [shape=record];\n";
+            contenido += "splines=false;\n"; // Flechas rectas
+
+            for (int i = 0; i < vehiculosAntiguos.Count; i++)
+            {
+                var vehiculo = vehiculosAntiguos[i];
+                contenido += $"node{i} [label=\"ID: {vehiculo.Id} \\n ID Usuario: {vehiculo.ID_Usuario} \\n Marca: {GetFixedString(vehiculo.Marca)} \\n Modelo: {vehiculo.Modelo} \\n Placa: {GetFixedString(vehiculo.Placa)}\"];\n";
+
+                if (i < vehiculosAntiguos.Count - 1)
+                {
+                    contenido += $"node{i} -> node{i + 1} [dir=forward];\n";
+                    contenido += $"node{i} -> node{i + 1} [dir=back];\n";
+                }
+            }
+
+            contenido += "}\n";
+
+            // Generar el archivo .dot en la carpeta "reports"
+            GenerarArchivoDot("TopVehiculosAntiguos.dot", contenido);
+
+            // Generar el archivo PNG usando Graphviz
+            var process = new Process();
+            process.StartInfo.FileName = "dot";
+            process.StartInfo.Arguments = $"-Tpng {Path.Combine(Directory.GetCurrentDirectory(), "reports", "TopVehiculosAntiguos.dot")} -o {Path.Combine(Directory.GetCurrentDirectory(), "reports", "TopVehiculosAntiguos.png")}";
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
+            process.WaitForExit();
+        }
+
+        public static void GenerarArchivoDot(string nombre, string contenido)
+        {
+            try
+            {
+                string carpeta = Path.Combine(Directory.GetCurrentDirectory(), "reports");
+                if (!Directory.Exists(carpeta))
+                {
+                    Directory.CreateDirectory(carpeta);
+                }
+
+                if (string.IsNullOrEmpty(nombre)) // Verificar que el nombre no sea nulo o vacío
+                {
+                    Console.WriteLine("El nombre del archivo no puede ser nulo o vacío.");
+                    return;
+                }
+
+                if (!nombre.EndsWith(".dot"))
+                {
+                    nombre += ".dot";
+                }
+
+                string rutaArchivo = Path.Combine(carpeta, nombre);
+                File.WriteAllText(rutaArchivo, contenido);
+
+                Console.WriteLine($"Archivo generado con éxito en: {rutaArchivo}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al generar el archivo: {ex.Message}");
+            }
+        }
+
+        private static string GetFixedString(char* fixedStr)
+        {
+            string str = "";
+            for (int i = 0; fixedStr[i] != '\0'; i++)
+            {
+                str += fixedStr[i];
+            }
+            return str;
         }
 
         // Destructor de la clase

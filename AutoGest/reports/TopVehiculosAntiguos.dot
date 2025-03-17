@@ -1,0 +1,18 @@
+digraph G {
+rankdir=LR;
+node [shape=record];
+splines=false;
+node0 [label="ID: 50 \n ID Usuario: 1 \n Marca: 1 \n Modelo: 1 \n Placa: 1"];
+node0 -> node1 [dir=forward];
+node0 -> node1 [dir=back];
+node1 [label="ID: 1 \n ID Usuario: 1 \n Marca: Honda Civic \n Modelo: 2005 \n Placa: XZJ7H9K"];
+node1 -> node2 [dir=forward];
+node1 -> node2 [dir=back];
+node2 [label="ID: 1 \n ID Usuario: 1 \n Marca: Honda Civic \n Modelo: 2005 \n Placa: XZJ7H9K"];
+node2 -> node3 [dir=forward];
+node2 -> node3 [dir=back];
+node3 [label="ID: 1 \n ID Usuario: 1 \n Marca: Honda Civic \n Modelo: 2005 \n Placa: XZJ7H9K"];
+node3 -> node4 [dir=forward];
+node3 -> node4 [dir=back];
+node4 [label="ID: 5 \n ID Usuario: 3 \n Marca: Chevrolet Aveo \n Modelo: 2007 \n Placa: BZX5D2L"];
+}

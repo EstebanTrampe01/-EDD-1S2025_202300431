@@ -12,12 +12,14 @@ namespace AutoGest.Interfaces
         private ListaCircular listaRepuestos;
         private ListaDoblementeEnlazada listaVehiculos;
         private Pila pilaFacturas;
+        private Cola colaServicios; // Añadir una instancia de Cola
 
-        public InterfazGS(ListaCircular listaRepuestos, ListaDoblementeEnlazada listaVehiculos, Pila pilaFacturas) : base("Ingreso de Servicios")
+        public InterfazGS(ListaCircular listaRepuestos, ListaDoblementeEnlazada listaVehiculos, Pila pilaFacturas, Cola colaServicios) : base("Ingreso de Servicios")
         {
             this.listaRepuestos = listaRepuestos;
             this.listaVehiculos = listaVehiculos;
             this.pilaFacturas = pilaFacturas;
+            this.colaServicios = colaServicios; // Usar la instancia de Cola pasada como parámetro
 
             SetDefaultSize(400, 300);
             SetPosition(WindowPosition.Center);
@@ -85,6 +87,9 @@ namespace AutoGest.Interfaces
                         Servicio servicio = new Servicio(int.Parse(entryID.Text), idRepuesto, idVehiculo, entryDetalles.Text, costoServicio);
                         // Aquí puedes agregar la lógica para guardar el servicio
 
+                        // Encolar el servicio
+                        colaServicios.Encolar(servicio);
+
                         // Crear y guardar la factura
                         double total = costoServicio + repuesto->Costo; // Asumiendo que el costo del vehículo no se suma
                         Factura factura = new Factura(servicio.ID, servicio.ID, total);
@@ -98,16 +103,25 @@ namespace AutoGest.Interfaces
                         if (repuesto == null)
                         {
                             Console.WriteLine("Repuesto no encontrado.");
+                            MessageDialog md = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, "Repuesto no encontrado.");
+                            md.Run();
+                            md.Destroy();
                         }
                         if (vehiculo == null)
                         {
                             Console.WriteLine("Vehículo no encontrado.");
+                            MessageDialog md = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, "Vehículo no encontrado.");
+                            md.Run();
+                            md.Destroy();
                         }
                     }
                 }
                 else
                 {
                     Console.WriteLine("ID de repuesto, vehículo o costo inválido.");
+                    MessageDialog md = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, "ID de repuesto, vehículo o costo inválido.");
+                    md.Run();
+                    md.Destroy();
                 }
             };
             vbox.PackStart(buttonGuardar, false, false, 10);

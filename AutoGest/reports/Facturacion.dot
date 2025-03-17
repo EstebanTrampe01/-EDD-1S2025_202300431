@@ -1,0 +1,10 @@
+digraph G {
+rankdir=TB;
+node [shape=record];
+splines=true;
+node0 [label="ID: 6 \n ID_Orden: 6 \n Total: 200"]
+node0 -> node1;
+node1 [label="ID: 4 \n ID_Orden: 4 \n Total: 160"]
+node1 -> node2;
+node2 [label="ID: 1 \n ID_Orden: 1 \n Total: 90,75"]
+}

@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using System.IO;
+using System.Diagnostics;
 
 namespace Usuarios
 {
@@ -31,85 +33,82 @@ namespace Usuarios
                 }
                 temp->Sig = nuevo;
             }
+
+            GenerarGrafico("Usuarios.dot");
         }
 
-public void Eliminar(int id)
-    {
-        if (typeof(T) != typeof(Usuario))
+        public void Eliminar(int id)
         {
-            throw new InvalidOperationException("El método Eliminar solo puede ser utilizado con listas de usuarios.");
-        }
-
-        if (cabeza == null) return;
-
-        Usuario* usuarioCabeza = (Usuario*)(&cabeza->Data);
-        if (usuarioCabeza->id == id)
-        {
-            Nodo<T>* temp = cabeza;
-            cabeza = cabeza->Sig;
-            Marshal.FreeHGlobal((IntPtr)temp);
-            return;
-        }
-
-        Nodo<T>* actual = cabeza;
-        while (actual->Sig != null)
-        {
-            Usuario* usuarioActual = (Usuario*)(&actual->Sig->Data);
-            if (usuarioActual->id == id)
+            if (typeof(T) != typeof(Usuario))
             {
-                Nodo<T>* temp = actual->Sig;
-                actual->Sig = actual->Sig->Sig;
+                throw new InvalidOperationException("El método Eliminar solo puede ser utilizado con listas de usuarios.");
+            }
+
+            if (cabeza == null) return;
+
+            Usuario* usuarioCabeza = (Usuario*)(&cabeza->Data);
+            if (usuarioCabeza->id == id)
+            {
+                Nodo<T>* temp = cabeza;
+                cabeza = cabeza->Sig;
                 Marshal.FreeHGlobal((IntPtr)temp);
+                GenerarGrafico("Usuarios.dot");
                 return;
             }
-            actual = actual->Sig;
+
+            Nodo<T>* actual = cabeza;
+            while (actual->Sig != null)
+            {
+                Usuario* usuarioActual = (Usuario*)(&actual->Sig->Data);
+                if (usuarioActual->id == id)
+                {
+                    Nodo<T>* temp = actual->Sig;
+                    actual->Sig = actual->Sig->Sig;
+                    Marshal.FreeHGlobal((IntPtr)temp);
+                    GenerarGrafico("Usuarios.dot");
+                    return;
+                }
+                actual = actual->Sig;
+            }
         }
-    }
 
         public void ModificarUsuario(int id, string nuevoNombre, string nuevoApellido, string nuevoCorreo, string nuevaContrasena)
         {
-            // se valida que sea tipo usuario
             if (typeof(T) != typeof(Usuarios.Usuario))
             {
                 throw new InvalidOperationException("El método ModificarUsuario solo puede ser utilizado con listas de usuarios.");
             }
-            // Recorre la lista enlazada.
+
             Nodo<T>* temp = cabeza;
             while (temp != null)
             {
-                // Obtiene el puntero al dato y lo interpreta como un Usuario.
                 Usuarios.Usuario* pUsuario = (Usuarios.Usuario*)(&temp->Data);
                 if (pUsuario->id == id)
                 {
-                    // Como la memoria es no administrada, los buffers ya tienen una dirección fija.
-                    // Simplemente se asignan a punteros locales.
                     char* n = pUsuario->name;
                     char* l = pUsuario->lastName;
                     char* c = pUsuario->correo;
                     char* p = pUsuario->contrasena;
                     int i;
-                    // Actualiza el campo name 
+
                     for (i = 0; i < nuevoNombre.Length && i < 50 - 1; i++)
                     {
                         n[i] = nuevoNombre[i];
                     }
                     n[i] = '\0';
 
-                    // Actualiza el campo lastName
                     for (i = 0; i < nuevoApellido.Length && i < 50 - 1; i++)
                     {
                         l[i] = nuevoApellido[i];
                     }
                     l[i] = '\0';
 
-                    // Actualiza el campo correo
                     for (i = 0; i < nuevoCorreo.Length && i < 100 - 1; i++)
                     {
                         c[i] = nuevoCorreo[i];
                     }
                     c[i] = '\0';
 
-                    // Actualiza el campo contrasena
                     for (i = 0; i < nuevaContrasena.Length && i < 50 - 1; i++)
                     {
                         p[i] = nuevaContrasena[i];
@@ -117,14 +116,15 @@ public void Eliminar(int id)
                     p[i] = '\0';
 
                     Console.WriteLine("Usuario modificado exitosamente.");
-                    return; // finalizar tras modificar
+                    GenerarGrafico("Usuarios.dot");
+                    return;
                 }
                 temp = temp->Sig;
             }
             Console.WriteLine("Usuario no encontrado.");
         }
 
-            public T* Buscar(int id)
+        public T* Buscar(int id)
         {
             Nodo<T>* temp = cabeza;
             while (temp != null)
@@ -152,7 +152,7 @@ public void Eliminar(int id)
             }
         }
 
-            public string ObtenerLista()
+        public string ObtenerLista()
         {
             if (typeof(T) != typeof(Usuario))
             {
@@ -178,6 +178,59 @@ public void Eliminar(int id)
                 str += fixedStr[i];
             }
             return str;
+        }
+
+        public void GenerarGrafico(string fileName)
+        {
+            string carpeta = Path.Combine(Directory.GetCurrentDirectory(), "reports");
+            if (!Directory.Exists(carpeta))
+            {
+                Directory.CreateDirectory(carpeta);
+            }
+
+            string filePath = Path.Combine(carpeta, fileName);
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine("digraph G {");
+                writer.WriteLine("rankdir=LR;"); // Orientación horizontal
+                writer.WriteLine("node [shape=record];");
+                writer.WriteLine("splines=false;"); // Flechas rectas
+
+                Nodo<T>* temp = cabeza;
+                int index = 0;
+                while (temp != null)
+                {
+                    if (typeof(T) == typeof(Usuario))
+                    {
+                        Usuario* usuario = (Usuario*)(&temp->Data);
+                        writer.WriteLine($"node{index} [label=\"ID: {usuario->id} \\n Nombre: {GetFixedString(usuario->name)} \\n Apellido: {GetFixedString(usuario->lastName)} \\n Correo: {GetFixedString(usuario->correo)} \\n Contraseña: {GetFixedString(usuario->contrasena)}\"]");
+                    }
+                    else
+                    {
+                        writer.WriteLine($"node{index} [label=\"<data> {temp->Data} \\n <next>\"]");
+                    }
+
+                    if (temp->Sig != null)
+                    {
+                        writer.WriteLine($"node{index} -> node{index + 1} [tailport=next];");
+                    }
+                    temp = temp->Sig;
+                    index++;
+                }
+
+                writer.WriteLine("}");
+            }
+
+            // Generar el archivo PNG usando Graphviz
+            var process = new Process();
+            process.StartInfo.FileName = "dot";
+            process.StartInfo.Arguments = $"-Tpng {filePath} -o {Path.Combine(carpeta, Path.ChangeExtension(fileName, ".png"))}";
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
+            process.WaitForExit();
         }
 
         ~ListaSimple()

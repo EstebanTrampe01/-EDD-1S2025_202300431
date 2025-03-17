@@ -1,16 +1,22 @@
 using Gtk;
 using System;
 using Usuarios;
+using Vehiculos;
+
 
 namespace AutoGest.Interfaces
 {
     public unsafe class InterfazGU : Window
     {
         private ListaSimple<Usuario> listaUsuarios;
+        private ListaDoblementeEnlazada listaVehiculos;
 
-        public InterfazGU(ListaSimple<Usuario> listaUsuarios) : base("Gestión de Usuarios")
+
+        public InterfazGU(ListaSimple<Usuario> listaUsuarios, ListaDoblementeEnlazada listaVehiculos) : base("Gestión de Usuarios")
         {
             this.listaUsuarios = listaUsuarios;
+            this.listaVehiculos = listaVehiculos;
+
 
             SetDefaultSize(400, 300);
             SetPosition(WindowPosition.Center);
