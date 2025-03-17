@@ -1,0 +1,12 @@
+digraph G {
+rankdir=LR;
+node [shape=record];
+splines=true;
+node0 [label="ID: 1 \n Id_Repuesto: 2 \n Id_Vehiculo: 2 \n Detalles: VACIO 1 \n Costo: 75"]
+node0 -> node1;
+node1 [label="ID: 4 \n Id_Repuesto: 3 \n Id_Vehiculo: 3 \n Detalles: VACIO 2 \n Costo: 100"]
+node1 -> node2;
+node2 [label="ID: 6 \n Id_Repuesto: 12 \n Id_Vehiculo: 12 \n Detalles: VACIO 3 \n Costo: 150"]
+node2 -> node3;
+node3 [label="ID: 9 \n Id_Repuesto: 5 \n Id_Vehiculo: 12 \n Detalles: VACIO 4 \n Costo: 150"]
+}
