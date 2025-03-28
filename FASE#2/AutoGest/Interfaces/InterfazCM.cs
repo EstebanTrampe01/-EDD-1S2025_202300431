@@ -13,14 +13,14 @@ namespace AutoGest.Interfaces
     {
         private ListaSimple<Usuario> listaUsuarios;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ListaCircular listaRepuestos;
+        private ArbolAVL arbolRepuestos;
 
 
-        public InterfazCM(ListaSimple<Usuario> listaUsuarios, ListaDoblementeEnlazada listaVehiculos, ListaCircular listaRepuestos) : base("Cargas Masivas")
+        public InterfazCM(ListaSimple<Usuario> listaUsuarios, ListaDoblementeEnlazada listaVehiculos, ArbolAVL arbolRepuestos) : base("Cargas Masivas")
         {
             this.listaUsuarios = listaUsuarios;
             this.listaVehiculos = listaVehiculos;
-            this.listaRepuestos = listaRepuestos;
+            this.arbolRepuestos = arbolRepuestos;
 
             SetDefaultSize(300, 200);
             SetPosition(WindowPosition.Center);
@@ -99,7 +99,7 @@ namespace AutoGest.Interfaces
 
                                     LRepuesto nuevoRepuesto = new LRepuesto(id, repuesto, detalles, costo);
                                     Console.WriteLine($"ID: {nuevoRepuesto.Id}, Repuesto: {repuesto}, Detalles: {detalles}, Costo: {costo}");
-                                    listaRepuestos.Insertar(id, repuesto, detalles, costo);
+                                    arbolRepuestos.Insertar(id, repuesto, detalles, costo);
                                 }
                             }
                         }
@@ -126,7 +126,7 @@ namespace AutoGest.Interfaces
                 }
                 else if (selectedOption == "Repuestos")
                 {
-                    listaRepuestos.Mostrar();
+                    arbolRepuestos.Mostrar();
                 }
             };
             vbox.PackStart(buttonCargar, false, false, 10);

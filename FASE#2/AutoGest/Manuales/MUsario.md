@@ -48,8 +48,8 @@ El sistema implementa estructuras de datos avanzadas en C# para gestionar la inf
 - **Usuarios**: Lista simplemente enlazada.
 - **Vehículos**: Lista doblemente enlazada.
 - **Repuestos**: Lista circular.
-- **Servicios**: Cola.
-- **Facturas**: Pila.
+- **Servicios**: ArbolBinario.
+- **Facturas**: ArbolB.
 - **Bitácora**: Matriz dispersa.
 
 ## Lógica del Programa

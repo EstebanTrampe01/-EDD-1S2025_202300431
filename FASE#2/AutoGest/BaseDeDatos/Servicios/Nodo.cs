@@ -1,14 +1,16 @@
 namespace Servicios
 {
-    public class Nodo
+    public class NodoBinario
     {
         public Servicio Data { get; set; }
-        public Nodo Sig { get; set; }
+        public NodoBinario Izquierda { get; set; }
+        public NodoBinario Derecha { get; set; }
 
-        public Nodo(Servicio data)
+        public NodoBinario(Servicio data)
         {
             Data = data;
-            Sig = null;
+            Izquierda = null;
+            Derecha = null;
         }
     }
 }

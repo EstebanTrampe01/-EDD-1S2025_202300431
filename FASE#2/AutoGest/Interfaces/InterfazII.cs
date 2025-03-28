@@ -21,15 +21,15 @@ namespace AutoGest.Interfaces
 
         private ListaSimple<Usuario> listaUsuarios;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ListaCircular listaRepuestos;
-        private ListaCircular listaServicios;
+        private ArbolAVL arbolRepuestos;
+        private ArbolAVL listaServicios;
 
-        public InterfazII(ListaSimple<Usuario> listaUsuarios, ListaDoblementeEnlazada listaVehiculos, ListaCircular listaRepuestos) : base("Ingreso de Datos")
+        public InterfazII(ListaSimple<Usuario> listaUsuarios, ListaDoblementeEnlazada listaVehiculos, ArbolAVL arbolRepuestos) : base("Ingreso de Datos")
         {
             this.listaUsuarios = listaUsuarios;
             this.listaVehiculos = listaVehiculos;
-            this.listaRepuestos = listaRepuestos;
-            this.listaServicios = listaRepuestos;
+            this.arbolRepuestos = arbolRepuestos;
+            this.listaServicios = arbolRepuestos;
 
             SetDefaultSize(400, 300);
             SetPosition(WindowPosition.Center);
@@ -177,7 +177,7 @@ namespace AutoGest.Interfaces
         private void GuardarRepuesto()
         {
             int idRepuesto = int.Parse(entryIdRepuesto.Text);
-            if (listaRepuestos.Buscar(idRepuesto) != null)
+            if (arbolRepuestos.Buscar(idRepuesto) != null)
             {
                 Console.WriteLine("Error: Ya existe un repuesto con esa ID.");
             }
@@ -189,7 +189,7 @@ namespace AutoGest.Interfaces
                     entryDetalles.Text,
                     double.Parse(entryCosto.Text)
                 );
-                listaRepuestos.Insertar(repuesto.Id, ConvertFixedCharArrayToString(repuesto.Repuesto, 50), ConvertFixedCharArrayToString(repuesto.Detalles, 100), repuesto.Costo);
+                arbolRepuestos.Insertar(repuesto.Id, ConvertFixedCharArrayToString(repuesto.Repuesto, 50), ConvertFixedCharArrayToString(repuesto.Detalles, 100), repuesto.Costo);
                 Console.WriteLine($"Repuestos: ID={repuesto.Id}, Repuesto={ConvertFixedCharArrayToString(repuesto.Repuesto, 50)}, Detalles={ConvertFixedCharArrayToString(repuesto.Detalles, 100)}, Costo={repuesto.Costo}");
             }
         }

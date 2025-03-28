@@ -6,7 +6,7 @@ namespace AutoGest.Interfaces
 {
     public unsafe class InterfazCF : Window
     {
-        public InterfazCF(Pila pilaFacturas) : base("Última Factura Generada")
+        public InterfazCF(ArbolB arbolFacturas) : base("Última Factura Generada")
         {
             SetDefaultSize(400, 300);
             SetPosition(WindowPosition.Center);
@@ -38,7 +38,7 @@ namespace AutoGest.Interfaces
             vbox.PackStart(hboxTotal, false, false, 10);
 
             // Obtener la última factura generada
-            Factura ultimaFactura = pilaFacturas.Pop();
+            Factura ultimaFactura = arbolFacturas.Pop();
             if (ultimaFactura != null)
             {
                 labelID_data.Text = ultimaFactura.ID.ToString();

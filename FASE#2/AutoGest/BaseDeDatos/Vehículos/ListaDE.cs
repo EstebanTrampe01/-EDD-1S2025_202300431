@@ -43,8 +43,7 @@ namespace Vehiculos
 
             // Llamar a la función para generar el gráfico
             GenerarGrafico("Vehiculos.dot");
-                        GenerarTopVehiculosAntiguos(5); // Puedes cambiar el número 5 por el número de vehículos que quieras en el top
-
+            GenerarTopVehiculosAntiguos(5); // Puedes cambiar el número 5 por el número de vehículos que quieras en el top
         }
 
         public void Eliminar(int id)
@@ -86,6 +85,43 @@ namespace Vehiculos
                 actual = actual->Next;
             }
             return null;
+        }
+
+        public void ModificarVehiculo(int id, int nuevoIdUsuario, string nuevaMarca, int nuevoModelo, string nuevaPlaca)
+        {
+            Nodo<Vehiculo>* temp = head;
+            while (temp != null)
+            {
+                Vehiculo* pVehiculo = &temp->Data;
+                if (pVehiculo->Id == id)
+                {
+                    pVehiculo->ID_Usuario = nuevoIdUsuario;
+        
+                    char* m = pVehiculo->Marca;
+                    char* p = pVehiculo->Placa;
+                    int i;
+        
+                    for (i = 0; i < nuevaMarca.Length && i < 50 - 1; i++)
+                    {
+                        m[i] = nuevaMarca[i];
+                    }
+                    m[i] = '\0';
+        
+                    pVehiculo->Modelo = nuevoModelo;
+        
+                    for (i = 0; i < nuevaPlaca.Length && i < 50 - 1; i++)
+                    {
+                        p[i] = nuevaPlaca[i];
+                    }
+                    p[i] = '\0';
+        
+                    Console.WriteLine("Vehículo modificado exitosamente.");
+                    GenerarGrafico("Vehiculos.dot");
+                    return;
+                }
+                temp = temp->Next;
+            }
+            Console.WriteLine("Vehículo no encontrado.");
         }
 
         public string ObtenerLista()

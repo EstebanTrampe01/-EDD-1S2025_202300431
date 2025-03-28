@@ -1,53 +1,33 @@
-digraph G {
-rankdir=LR;
+digraph AVL {
 node [shape=record];
-splines=true;
-node0 [label="ID: 1 \n Repuesto: Filtro de aceite \n Detalles: Filtra impurezas del aceite del motor. \n Costo: 25,5"]
-node0 -> node1;
-node0 -> node1 [dir=back];
-node1 [label="ID: 2 \n Repuesto: Bujías \n Detalles: Componente esencial para encender la mezcla de aire y combustible. \n Costo: 15,75"]
-node1 -> node2;
-node1 -> node2 [dir=back];
-node2 [label="ID: 3 \n Repuesto: Frenos delanteros \n Detalles: Piezas para frenar el vehículo en la parte delantera. \n Costo: 60"]
-node2 -> node3;
-node2 -> node3 [dir=back];
-node3 [label="ID: 4 \n Repuesto: Pastillas de freno traseras \n Detalles: Piezas para frenar el vehículo en la parte trasera. \n Costo: 45,3"]
-node3 -> node4;
-node3 -> node4 [dir=back];
-node4 [label="ID: 5 \n Repuesto: Amortiguadores \n Detalles: Componente de suspensión para absorber impactos. \n Costo: 95,2"]
-node4 -> node5;
-node4 -> node5 [dir=back];
-node5 [label="ID: 6 \n Repuesto: Aceite de motor \n Detalles: Lubricante para el motor del vehículo. \n Costo: 18,6"]
-node5 -> node6;
-node5 -> node6 [dir=back];
-node6 [label="ID: 7 \n Repuesto: Filtro de aire \n Detalles: Filtra el aire que entra al motor para mejorar la combustión. \n Costo: 22,1"]
-node6 -> node7;
-node6 -> node7 [dir=back];
-node7 [label="ID: 8 \n Repuesto: Correa de distribución \n Detalles: Componente que sincroniza el motor. \n Costo: 80"]
-node7 -> node8;
-node7 -> node8 [dir=back];
-node8 [label="ID: 9 \n Repuesto: Radiador \n Detalles: Sistema para mantener el motor a temperatura adecuada. \n Costo: 150"]
-node8 -> node9;
-node8 -> node9 [dir=back];
-node9 [label="ID: 10 \n Repuesto: Batería \n Detalles: Fuente de energía para el vehículo. \n Costo: 100,5"]
-node9 -> node10;
-node9 -> node10 [dir=back];
-node10 [label="ID: 11 \n Repuesto: Cables de encendido \n Detalles: Conducen energía desde la batería a las bujías. \n Costo: 30,4"]
-node10 -> node11;
-node10 -> node11 [dir=back];
-node11 [label="ID: 12 \n Repuesto: Espejos laterales \n Detalles: Espejos para una mejor visibilidad en el vehículo. \n Costo: 50"]
-node11 -> node12;
-node11 -> node12 [dir=back];
-node12 [label="ID: 13 \n Repuesto: Manguera de radiador \n Detalles: Transporta el líquido refrigerante en el sistema de enfriamiento. \n Costo: 20,8"]
-node12 -> node13;
-node12 -> node13 [dir=back];
-node13 [label="ID: 14 \n Repuesto: Suspensión trasera \n Detalles: Sistema que absorbe impactos en la parte trasera del vehículo. \n Costo: 120"]
-node13 -> node14;
-node13 -> node14 [dir=back];
-node14 [label="ID: 15 \n Repuesto: Bombas de freno \n Detalles: Componente que genera presión para accionar los frenos. \n Costo: 75"]
-node14 -> node15;
-node14 -> node15 [dir=back];
-node15 [label="ID: 50 \n Repuesto: CALIFACION \n Detalles: CALIFACION \n Costo: 500"]
-node15 -> node0 [constraint=false];
-node15 -> node0 [constraint=false, dir=back];
+rankdir=TB;
+node8 [label="<f0> | <f1> ID: 8\nRepuesto: Correa de distribución\nDetalles: Componente que sincroniza el motor.\nCosto: 80\nFB: 0 | <f2>"];
+node4 [label="<f0> | <f1> ID: 4\nRepuesto: Pastillas de freno traseras\nDetalles: Piezas para frenar el vehículo en la parte trasera.\nCosto: 45,3\nFB: 0 | <f2>"];
+node2 [label="<f0> | <f1> ID: 2\nRepuesto: Bujías\nDetalles: Componente esencial para encender la mezcla de aire y combustible.\nCosto: 15,75\nFB: 0 | <f2>"];
+node1 [label="<f0> | <f1> ID: 1\nRepuesto: Filtro de aceite\nDetalles: Filtra impurezas del aceite del motor.\nCosto: 25,5\nFB: 0 | <f2>"];
+node3 [label="<f0> | <f1> ID: 3\nRepuesto: Frenos delanteros\nDetalles: Piezas para frenar el vehículo en la parte delantera.\nCosto: 60\nFB: 0 | <f2>"];
+node6 [label="<f0> | <f1> ID: 6\nRepuesto: Aceite de motor\nDetalles: Lubricante para el motor del vehículo.\nCosto: 18,6\nFB: 0 | <f2>"];
+node5 [label="<f0> | <f1> ID: 5\nRepuesto: Amortiguadores\nDetalles: Componente de suspensión para absorber impactos.\nCosto: 95,2\nFB: 0 | <f2>"];
+node7 [label="<f0> | <f1> ID: 7\nRepuesto: Filtro de aire\nDetalles: Filtra el aire que entra al motor para mejorar la combustión.\nCosto: 22,1\nFB: 0 | <f2>"];
+node12 [label="<f0> | <f1> ID: 12\nRepuesto: Espejos laterales\nDetalles: Espejos para una mejor visibilidad en el vehículo.\nCosto: 50\nFB: 0 | <f2>"];
+node10 [label="<f0> | <f1> ID: 10\nRepuesto: Batería\nDetalles: Fuente de energía para el vehículo.\nCosto: 100,5\nFB: 0 | <f2>"];
+node9 [label="<f0> | <f1> ID: 9\nRepuesto: Radiador\nDetalles: Sistema para mantener el motor a temperatura adecuada.\nCosto: 150\nFB: 0 | <f2>"];
+node11 [label="<f0> | <f1> ID: 11\nRepuesto: Cables de encendido\nDetalles: Conducen energía desde la batería a las bujías.\nCosto: 30,4\nFB: 0 | <f2>"];
+node14 [label="<f0> | <f1> ID: 14\nRepuesto: Suspensión trasera\nDetalles: Sistema que absorbe impactos en la parte trasera del vehículo.\nCosto: 120\nFB: 0 | <f2>"];
+node13 [label="<f0> | <f1> ID: 13\nRepuesto: Manguera de radiador\nDetalles: Transporta el líquido refrigerante en el sistema de enfriamiento.\nCosto: 20,8\nFB: 0 | <f2>"];
+node15 [label="<f0> | <f1> ID: 15\nRepuesto: Bombas de freno\nDetalles: Componente que genera presión para accionar los frenos.\nCosto: 75\nFB: 0 | <f2>"];
+"node8":f0 -> "node4":f1;
+"node4":f0 -> "node2":f1;
+"node2":f0 -> "node1":f1;
+"node2":f2 -> "node3":f1;
+"node4":f2 -> "node6":f1;
+"node6":f0 -> "node5":f1;
+"node6":f2 -> "node7":f1;
+"node8":f2 -> "node12":f1;
+"node12":f0 -> "node10":f1;
+"node10":f0 -> "node9":f1;
+"node10":f2 -> "node11":f1;
+"node12":f2 -> "node14":f1;
+"node14":f0 -> "node13":f1;
+"node14":f2 -> "node15":f1;
 }

@@ -9,17 +9,17 @@ namespace AutoGest.Interfaces
 {
     public unsafe class InterfazGS : Window
     {
-        private ListaCircular listaRepuestos;
+        private ArbolAVL arbolRepuestos;
         private ListaDoblementeEnlazada listaVehiculos;
-        private Pila pilaFacturas;
-        private Cola colaServicios; // Añadir una instancia de Cola
+        private ArbolB arbolFacturas;
+        private ArbolBinario arbolServicios; // Añadir una instancia de ArbolBinario
 
-        public InterfazGS(ListaCircular listaRepuestos, ListaDoblementeEnlazada listaVehiculos, Pila pilaFacturas, Cola colaServicios) : base("Ingreso de Servicios")
+        public InterfazGS(ArbolAVL arbolRepuestos, ListaDoblementeEnlazada listaVehiculos, ArbolB arbolFacturas, ArbolBinario arbolServicios) : base("Ingreso de Servicios")
         {
-            this.listaRepuestos = listaRepuestos;
+            this.arbolRepuestos = arbolRepuestos;
             this.listaVehiculos = listaVehiculos;
-            this.pilaFacturas = pilaFacturas;
-            this.colaServicios = colaServicios; // Usar la instancia de Cola pasada como parámetro
+            this.arbolFacturas = arbolFacturas;
+            this.arbolServicios = arbolServicios; // Usar la instancia de ArbolBinario pasada como parámetro
 
             SetDefaultSize(400, 300);
             SetPosition(WindowPosition.Center);
@@ -71,7 +71,7 @@ namespace AutoGest.Interfaces
                 double costoServicio;
                 if (int.TryParse(entryIdRepuesto.Text, out idRepuesto) && int.TryParse(entryIdVehiculo.Text, out idVehiculo) && double.TryParse(entryCosto.Text, out costoServicio))
                 {
-                    LRepuesto* repuesto = listaRepuestos.Buscar(idRepuesto);
+                    LRepuesto* repuesto = arbolRepuestos.Buscar(idRepuesto);
                     Vehiculo* vehiculo = listaVehiculos.Buscar(idVehiculo);
 
                     if (repuesto != null && vehiculo != null)
@@ -88,12 +88,12 @@ namespace AutoGest.Interfaces
                         // Aquí puedes agregar la lógica para guardar el servicio
 
                         // Encolar el servicio
-                        colaServicios.Encolar(servicio);
+                        arbolServicios.Encolar(servicio);
 
                         // Crear y guardar la factura
                         double total = costoServicio + repuesto->Costo; // Asumiendo que el costo del vehículo no se suma
                         Factura factura = new Factura(servicio.ID, servicio.ID, total);
-                        pilaFacturas.Push(factura);
+                        arbolFacturas.Push(factura);
 
                         Console.WriteLine("Factura generada:");
                         Console.WriteLine(factura.ToString());

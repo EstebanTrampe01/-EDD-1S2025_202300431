@@ -152,6 +152,54 @@ namespace Usuarios
             }
         }
 
+     // Método corregido en la clase ListaSimple<T>
+        public unsafe bool VerificarCredenciales(string correo, string contrasena)
+        {
+            if (cabeza == null)
+                return false;
+        
+            Nodo<T>* temp = cabeza;
+            while (temp != null)
+            {
+                Usuario* usuario = (Usuario*)(&temp->Data);
+                string usuarioCorreo = GetFixedString(usuario->correo);
+                string usuarioContrasena = GetFixedString(usuario->contrasena);
+                
+                if (usuarioCorreo == correo && usuarioContrasena == contrasena)
+                {
+                    return true;
+                }
+                
+                temp = temp->Sig;  // Corregido: usar temp en lugar de actual
+            }
+            
+            return false;
+        }
+
+    // Método a agregar en la clase ListaSimple<T>
+        public unsafe (bool, int) VerificarCredencialesConId(string correo, string contrasena)
+        {
+            if (cabeza == null)
+                return (false, -1);
+        
+            Nodo<T>* temp = cabeza;
+            while (temp != null)
+            {
+                Usuario* usuario = (Usuario*)(&temp->Data);
+                string usuarioCorreo = GetFixedString(usuario->correo);
+                string usuarioContrasena = GetFixedString(usuario->contrasena);
+                
+                if (usuarioCorreo == correo && usuarioContrasena == contrasena)
+                {
+                    return (true, usuario->id);
+                }
+                
+                temp = temp->Sig;
+            }
+            
+            return (false, -1);
+        }
+
         public string ObtenerLista()
         {
             if (typeof(T) != typeof(Usuario))

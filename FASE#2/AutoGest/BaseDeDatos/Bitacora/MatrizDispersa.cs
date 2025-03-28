@@ -12,15 +12,15 @@ namespace Matriz
         public ListaEncabezado<int> filas; // Lista de encabezados para las filas (vehículos)
         public ListaEncabezado<int> columnas; // Lista de encabezados para las columnas (repuestos)
         private ListaDoblementeEnlazada listaVehiculos;
-        private ListaCircular listaRepuestos;
-        private Cola listaServicios;
+        private ArbolAVL arbolRepuestos;
+        private ArbolBinario listaServicios;
 
         // Constructor de la clase MatrizDispersa
-        public MatrizDispersa(int capa, ListaDoblementeEnlazada listaVehiculos, ListaCircular listaRepuestos, Cola listaServicios)
+        public MatrizDispersa(int capa, ListaDoblementeEnlazada listaVehiculos, ArbolAVL arbolRepuestos, ArbolBinario listaServicios)
         {
             this.capa = capa; // Inicializa la capa
             this.listaVehiculos = listaVehiculos;
-            this.listaRepuestos = listaRepuestos;
+            this.arbolRepuestos = arbolRepuestos;
             this.listaServicios = listaServicios;
             filas = new ListaEncabezado<int>("Vehículo"); // Inicializa la lista de encabezados de filas
             columnas = new ListaEncabezado<int>("Repuesto"); // Inicializa la lista de encabezados de columnas

@@ -199,11 +199,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/AutoGest/AutoGest.csproj",
+      "projectUniqueName": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj",
       "projectName": "AutoGest",
-      "projectPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/AutoGest/AutoGest.csproj",
+      "projectPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj",
       "packagesPath": "/home/dant/.nuget/packages/",
-      "outputPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/AutoGest/obj/",
+      "outputPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/dant/.nuget/NuGet/NuGet.Config"

@@ -10,14 +10,16 @@ namespace Repuestos
         public fixed char Repuesto[50];
         public fixed char Detalles[100];
         public double Costo;
-        public Nodo<LRepuesto>* Next;
+        
+        // Eliminar este campo ya que no se necesita para el árbol AVL
+        // public NodoAVL<LRepuesto>* Next;
 
         // Constructor que inicializa un nuevo LRepuesto con sus datos.
         public LRepuesto(int id, string repuesto, string detalles, double costo)
         {
             this.Id = id;
             this.Costo = costo;
-            this.Next = null;
+            // this.Next = null;  // Eliminar esta línea
 
             fixed (char* r = this.Repuesto, d = this.Detalles)
             {
