@@ -42,8 +42,7 @@ namespace Vehiculos
             }
 
             // Llamar a la función para generar el gráfico
-            GenerarGrafico("Vehiculos.dot");
-            GenerarTopVehiculosAntiguos(5); // Puedes cambiar el número 5 por el número de vehículos que quieras en el top
+            
         }
 
         public void Eliminar(int id)
@@ -116,7 +115,7 @@ namespace Vehiculos
                     p[i] = '\0';
         
                     Console.WriteLine("Vehículo modificado exitosamente.");
-                    GenerarGrafico("Vehiculos.dot");
+                    
                     return;
                 }
                 temp = temp->Next;
@@ -201,6 +200,12 @@ namespace Vehiculos
             process.WaitForExit();
         }
 
+        // Añadir este método a la clase ListaDoblementeEnlazada
+        public Nodo<Vehiculo>* ObtenerPrimerNodo()
+        {
+            return head;
+        }
+
         public void GenerarTopVehiculosAntiguos(int topN)
         {
             List<Vehiculo> vehiculos = new List<Vehiculo>();
@@ -233,7 +238,6 @@ namespace Vehiculos
             contenido += "}\n";
 
             // Generar el archivo .dot en la carpeta "reports"
-            GenerarArchivoDot("TopVehiculosAntiguos.dot", contenido);
 
             // Generar el archivo PNG usando Graphviz
             var process = new Process();

@@ -5,39 +5,88 @@ using Repuestos;
 using Vehiculos;
 using Facturas;
 using Servicios;
+using AutoGest.Interfaces;
+using System.Collections.Generic;
+using AutoGest;
 
-public class Login : Window
+public class Login : Box
 {
-    public Login() : base("LOGIN")
+    private Entry entryCorreo;
+    private Entry entryContrasena;
+    private InterfazMain mainWindow;
+    private Label labelTitulo;
+    
+    // Constructor para cuando se usa como panel dentro de InterfazMain
+    public Login(InterfazMain mainWindow)
     {
-        SetDefaultSize(300, 200);
-        SetPosition(WindowPosition.Center);
+        this.mainWindow = mainWindow;
+        
+        // Configurar espaciado y bordes
+        BorderWidth = 20;
+        Spacing = 15;
+        
+        // Usar un contenedor vertical centralizado
+        VBox contentBox = new VBox(false, 10);
+        contentBox.BorderWidth = 20;
+        
+        // Crear el título con mejor formato
+        labelTitulo = new Label();
+        labelTitulo.Markup = "<span font='16' weight='bold'>INICIO DE SESIÓN</span>";
+        labelTitulo.SetAlignment(0.5f, 0.5f); // Centrar el título
+        contentBox.PackStart(labelTitulo, false, false, 20);
+        
+        // Crear el campo de correo con mejor organización
+        Frame frameCorreo = new Frame("Correo electrónico");
+        entryCorreo = new Entry();
+        entryCorreo.WidthChars = 30;
+        entryCorreo.SetSizeRequest(300, 30);
+        entryCorreo.Changed += OnEntryChanged;
+        frameCorreo.Add(entryCorreo);
+        contentBox.PackStart(frameCorreo, false, false, 10);
+        
+        // Crear el campo de contraseña con mejor organización
+        Frame frameContrasena = new Frame("Contraseña");
+        entryContrasena = new Entry { Visibility = false };
+        entryContrasena.ActivatesDefault = true;
+        entryContrasena.WidthChars = 30;
+        entryContrasena.SetSizeRequest(300, 30);
+        entryContrasena.Changed += OnEntryChanged;
+        frameContrasena.Add(entryContrasena);
+        contentBox.PackStart(frameContrasena, false, false, 10);
+        
+        // Crear el botón de validar con mejor formato
+        Button buttonValidar = new Button("Iniciar Sesión");
+        buttonValidar.SetSizeRequest(200, 40);
+        buttonValidar.Clicked += OnValidarClicked;
+        buttonValidar.CanDefault = true;
+        
+        // Centrar el botón
+        HBox buttonBox = new HBox();
+        buttonBox.PackStart(new Label(""), true, true, 0);
+        buttonBox.PackStart(buttonValidar, false, false, 0);
+        buttonBox.PackStart(new Label(""), true, true, 0);
+        contentBox.PackStart(buttonBox, false, false, 20);
+        
+        // Centrar el contenido en el panel
+        HBox centeringBox = new HBox();
+        centeringBox.PackStart(new Label(""), true, true, 0);
+        centeringBox.PackStart(contentBox, false, false, 0);
+        centeringBox.PackStart(new Label(""), true, true, 0);
+        
+        PackStart(centeringBox, true, true, 0);
+    }
 
-        VBox vbox = new VBox(false, 10);
-
-        // Crear el label superior
-        Label labelTitulo = new Label("INICIO DE SESION");
-        vbox.PackStart(labelTitulo, false, false, 0);
-
-        // Crear el label y el entry para el correo
-        HBox hboxCorreo = new HBox(false, 5);
-        Label labelCorreo = new Label("Correo:");
-        Entry entryCorreo = new Entry();
-        hboxCorreo.PackStart(labelCorreo, false, false, 10);
-        hboxCorreo.PackStart(entryCorreo, true, true, 10);
-
-        // Crear el label y el entry para la contraseña
-        HBox hboxContrasena = new HBox(false, 5);
-        Label labelContrasena = new Label("Contraseña:");
-        Entry entryContrasena = new Entry();
-        entryContrasena.Visibility = false; // Ocultar la contraseña
-        hboxContrasena.PackStart(labelContrasena, false, false, 10);
-        hboxContrasena.PackStart(entryContrasena, true, true, 10);
-
-        // Crear el botón de validar
-        Button buttonValidar = new Button("Validar");
-        buttonValidar.Clicked += (sender, e) => {
-            // Lógica de validación
+    // Método para deshabilitar el botón si los campos están vacíos
+    private void OnEntryChanged(object sender, EventArgs e)
+    {
+        // Puedes agregar lógica adicional para validación aquí
+    }
+    
+    // Método para manejar el click en el botón de validar
+    private void OnValidarClicked(object sender, EventArgs e)
+    {
+        try
+        {
             string correo = entryCorreo.Text;
             string contrasena = entryContrasena.Text;
 
@@ -45,10 +94,9 @@ public class Login : Window
             bool esUsuarioRegistrado = false;
             int idUsuario = -1;
 
-            // Verificar si es un usuario registrado (si ya se han cargado usuarios)
+            // Verificar si es un usuario registrado
             if (!esAdmin && Program.listaUsuarios != null)
             {
-                // Usar el método VerificarCredencialesConId de la lista de usuarios
                 (esUsuarioRegistrado, idUsuario) = Program.listaUsuarios.VerificarCredencialesConId(correo, contrasena);
                 
                 if (esUsuarioRegistrado)
@@ -59,52 +107,117 @@ public class Login : Window
 
             if (esAdmin)
             {
-                // Mostrar la interfaz de menú para administradores
-                InterfazMenu interfazMenu = new InterfazMenu(
-                    Program.listaUsuarios, 
-                    Program.arbolRepuestos, 
-                    Program.listaVehiculos, 
-                    Program.arbolFacturas, 
-                    Program.arbolServicios);
+                // Registrar entrada del administrador
+                RegistrosLoginManager.RegistrarEntrada("admin@usac.com");
+                Console.WriteLine("Entrada de administrador registrada");
                 
-                interfazMenu.ShowAll();
-                this.Destroy(); // Cerrar la ventana de login
+                // Cambiar al panel de menú en la ventana principal
+                if (mainWindow != null)
+                {
+                    LimpiarPanelActual();
+                    InterfazMenu interfazMenu = new InterfazMenu(
+                        mainWindow,
+                        Program.listaUsuarios, 
+                        Program.arbolRepuestos, 
+                        Program.listaVehiculos, 
+                        Program.arbolFacturas, 
+                        Program.arbolServicios);
+                    mainWindow.CambiarPanel(interfazMenu);
+                }
+                else
+                {
+                    // Código de compatibilidad para la transición
+                    InterfazMenu interfazMenu = new InterfazMenu(
+                        mainWindow,
+                        Program.listaUsuarios, 
+                        Program.arbolRepuestos, 
+                        Program.listaVehiculos, 
+                        Program.arbolFacturas, 
+                        Program.arbolServicios);
+                    interfazMenu.ShowAll();
+                    if (this.Parent is Window window)
+                    {
+                        window.Destroy();
+                    }
+                }
             }
             else if (esUsuarioRegistrado && idUsuario != -1)
             {
-                // Mostrar la interfaz de usuario para usuarios normales
-                InterfazUser interfazUser = new InterfazUser(
-                    idUsuario,
-                    Program.listaUsuarios, 
-                    Program.listaVehiculos, 
-                    Program.arbolFacturas, 
-                    Program.arbolServicios);
+                // Registrar entrada del usuario
+                RegistrosLoginManager.RegistrarEntrada(correo);
+                Console.WriteLine($"Entrada de usuario {correo} registrada");
                 
-                interfazUser.ShowAll();
-                this.Destroy(); // Cerrar la ventana de login
+                // Cambiar al panel de usuario en la ventana principal
+                if (mainWindow != null)
+                {
+                    LimpiarPanelActual();
+                    InterfazUser interfazUser = new InterfazUser(
+                        mainWindow,
+                        idUsuario,
+                        Program.listaUsuarios, 
+                        Program.listaVehiculos, 
+                        Program.arbolFacturas, 
+                        Program.arbolServicios);
+                    mainWindow.CambiarPanel(interfazUser);
+                }
+                else
+                {
+                    // Código de compatibilidad para la transición
+                    InterfazUser interfazUser = new InterfazUser(
+                        mainWindow,
+                        idUsuario,
+                        Program.listaUsuarios, 
+                        Program.listaVehiculos, 
+                        Program.arbolFacturas, 
+                        Program.arbolServicios);
+                    interfazUser.ShowAll();
+                    if (this.Parent is Window window)
+                    {
+                        window.Destroy();
+                    }
+                }
             }
             else
             {
-                // Mostrar un mensaje de error si las credenciales son incorrectas
-                MessageDialog md = new MessageDialog(this, 
-                    DialogFlags.DestroyWithParent, MessageType.Error, 
-                    ButtonsType.Close, "Correo o contraseña incorrectos");
-                md.Run();
-                md.Destroy();
+                // Credenciales incorrectas
+                MostrarError("Correo o contraseña incorrectos");
             }
-        };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en el proceso de validación: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+            MostrarError("Error al procesar la solicitud");
+        }
+    }
 
-        vbox.PackStart(hboxCorreo, false, false, 10);
-        vbox.PackStart(hboxContrasena, false, false, 10);
-        vbox.PackStart(buttonValidar, false, false, 10);
+    // Método para limpiar el panel actual antes de cambiar a otro panel
+    private void LimpiarPanelActual()
+    {
+        // Limpiar los campos de texto
+        entryCorreo.Text = string.Empty;
+        entryContrasena.Text = string.Empty;
+        
+        // Ocultar todos los widgets en este panel
+        foreach (Widget widget in this.Children)
+        {
+            this.Remove(widget);
+        }
+    }
 
-        // Añadir el evento DeleteEvent para manejar el cierre de ventana
-        DeleteEvent += (o, args) => {
-            Application.Quit();
-            args.RetVal = true;
-        };
-
-        Add(vbox);
-        ShowAll();
+    // Método para mostrar mensajes de error
+    private void MostrarError(string mensaje)
+    {
+        Window parentWindow = mainWindow != null ? mainWindow as Window : (this.Parent as Window);
+        
+        using (var md = new MessageDialog(parentWindow, 
+            DialogFlags.DestroyWithParent, 
+            MessageType.Error, 
+            ButtonsType.Close, 
+            mensaje))
+        {
+            md.Run();
+            md.Destroy();
+        }
     }
 }

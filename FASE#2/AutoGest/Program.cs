@@ -5,6 +5,7 @@ using Repuestos;
 using Vehiculos;
 using Facturas;
 using Servicios;
+using AutoGest;
 
 class Program
 {
@@ -26,9 +27,8 @@ class Program
         arbolFacturas = new ArbolB();
         arbolServicios = new ArbolBinario();
 
-        // Crear la ventana de login
-        Login login = new Login();
-        login.ShowAll();
+        InterfazMain interfazMain = new InterfazMain();
+        interfazMain.ShowAll();
 
         Application.Run();
     }

@@ -34,7 +34,6 @@ namespace Usuarios
                 temp->Sig = nuevo;
             }
 
-            GenerarGrafico("Usuarios.dot");
         }
 
         public void Eliminar(int id)
@@ -52,7 +51,6 @@ namespace Usuarios
                 Nodo<T>* temp = cabeza;
                 cabeza = cabeza->Sig;
                 Marshal.FreeHGlobal((IntPtr)temp);
-                GenerarGrafico("Usuarios.dot");
                 return;
             }
 
@@ -65,7 +63,6 @@ namespace Usuarios
                     Nodo<T>* temp = actual->Sig;
                     actual->Sig = actual->Sig->Sig;
                     Marshal.FreeHGlobal((IntPtr)temp);
-                    GenerarGrafico("Usuarios.dot");
                     return;
                 }
                 actual = actual->Sig;
@@ -116,7 +113,6 @@ namespace Usuarios
                     p[i] = '\0';
 
                     Console.WriteLine("Usuario modificado exitosamente.");
-                    GenerarGrafico("Usuarios.dot");
                     return;
                 }
                 temp = temp->Sig;

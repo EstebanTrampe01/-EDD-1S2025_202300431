@@ -1,15 +1,5 @@
 digraph BTree {
-    node [shape=record];
+    node [shape=record, style=filled, fillcolor=lightblue];
     rankdir=TB;
-    node0 [label="{<p0> ID: 2, Orden: 2, Total: 26,50|<p1> ID: 4, Orden: 4, Total: 26,50|<p2> ID: 6, Orden: 6, Total: 26,50|<p3> ID: 8, Orden: 8, Total: 26,50}"];
-    node1 [label="{<p0> ID: 1, Orden: 1, Total: 26,50}"];
-    node2 [label="{<p0> ID: 3, Orden: 3, Total: 26,50}"];
-    node3 [label="{<p0> ID: 5, Orden: 5, Total: 26,50}"];
-    node4 [label="{<p0> ID: 7, Orden: 7, Total: 26,50}"];
-    node5 [label="{<p0> ID: 9, Orden: 9, Total: 26,50|<p1> ID: 10, Orden: 10, Total: 26,50|<p2> ID: 20, Orden: 20, Total: 26,50}"];
-    node0:p0 -> node1;
-    node0:p1 -> node2;
-    node0:p2 -> node3;
-    node0:p3 -> node4;
-    node0:p3 -> node5;
+    nodo0 [label="<f0> ID:102\nOrden:2\nTotal:$4,00"];
 }

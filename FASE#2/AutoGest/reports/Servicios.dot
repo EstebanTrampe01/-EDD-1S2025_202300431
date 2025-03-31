@@ -1,25 +1,5 @@
 digraph G {
 node [shape=circle, style=filled, fillcolor=lightblue];
 rankdir=TB;
-node1 [label="ID: 1\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node2 [label="ID: 2\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node4 [label="ID: 4\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node7 [label="ID: 7\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node20 [label="ID: 20\nRepuesto: 1\nVehículo: 2\nCosto: $1,00"];
-node6 [label="ID: 6\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node10 [label="ID: 10\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node3 [label="ID: 3\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node5 [label="ID: 5\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node9 [label="ID: 9\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node8 [label="ID: 8\nRepuesto: 1\nVehículo: 1\nCosto: $1,00"];
-node1 -> node2 [label="L"];
-node1 -> node3 [label="R"];
-node2 -> node4 [label="L"];
-node2 -> node6 [label="R"];
-node4 -> node7 [label="L"];
-node4 -> node20 [label="R"];
-node6 -> node10 [label="L"];
-node3 -> node5 [label="L"];
-node3 -> node8 [label="R"];
-node5 -> node9 [label="L"];
+node2 [label="ID: 2\nRepuesto: 2\nVehículo: 2\nCosto: $2,00"];
 }
