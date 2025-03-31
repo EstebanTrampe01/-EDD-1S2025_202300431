@@ -90,7 +90,7 @@ public class Login : Box
             string correo = entryCorreo.Text;
             string contrasena = entryContrasena.Text;
 
-            bool esAdmin = (correo == "1" && contrasena == "1");
+            bool esAdmin = (correo == "admin@usac.com" && contrasena == "admin123");
             bool esUsuarioRegistrado = false;
             int idUsuario = -1;
 

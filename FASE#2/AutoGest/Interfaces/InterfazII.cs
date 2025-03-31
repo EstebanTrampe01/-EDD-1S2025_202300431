@@ -433,6 +433,12 @@ namespace AutoGest.Interfaces
                 MostrarMensaje(mainWindow, $"Ya existe un usuario con ID {idUsuario}", MessageType.Warning);
                 return;
             }
+
+            if (listaUsuarios.BuscarCorreo(entryCorreo.Text) != null)
+            {
+                MostrarMensaje(mainWindow, $"Ya existe un Correo con ese nombre {entryCorreo.Text}", MessageType.Warning);
+                return;
+            }
             
             // Validar resto de campos
             if (string.IsNullOrWhiteSpace(entryNombres.Text) || 

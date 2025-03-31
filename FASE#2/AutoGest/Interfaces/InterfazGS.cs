@@ -195,7 +195,7 @@ namespace AutoGest.Interfaces
                         
                         // Crear y guardar la factura
                         double total = costoServicio + repuesto->Costo;
-                        Factura factura = new Factura(idServicio + 100, idServicio, total);
+                        Factura factura = new Factura(idServicio+100, idServicio, total);
                         arbolFacturas.Insertar(factura);
                         
                         Console.WriteLine("Servicio guardado:");

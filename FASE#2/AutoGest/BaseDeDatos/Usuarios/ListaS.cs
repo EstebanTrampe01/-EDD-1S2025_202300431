@@ -138,6 +138,27 @@ namespace Usuarios
             return null;
         }
 
+        // En el método BuscarCorreo
+        public T* BuscarCorreo(string id)
+        {
+            Nodo<T>* temp = cabeza;
+            while (temp != null)
+            {
+                if (typeof(T) == typeof(Usuario))
+                {
+                    Usuario* usuario = (Usuario*)(&temp->Data);
+                    // Convertir el puntero char* a string antes de comparar
+                    string usuarioCorreo = GetFixedString(usuario->correo);
+                    if (usuarioCorreo == id)  // Ahora comparamos correctamente dos strings
+                    {
+                        return (T*)usuario;
+                    }
+                }
+                temp = temp->Sig;
+            }
+            return null;
+        }
+
         public void Imprimir()
         {
             Nodo<T>* temp = cabeza;
