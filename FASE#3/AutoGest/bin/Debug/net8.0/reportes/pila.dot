@@ -1,0 +1,10 @@
+digraph G {
+    node [shape=record];
+    rankdir=TB;
+    subgraph cluster_0 {
+        label = "ArbolB de Facturas";
+        n0 [label = "{<data> Factura: ID: 2, ID_Orden: 2, Total: 2}"];
+        n0 -> n1;
+        n1 [label = "{<data> Factura: ID: 1, ID_Orden: 1, Total: 2}"];
+    }
+}

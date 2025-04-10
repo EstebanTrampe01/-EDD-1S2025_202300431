@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "6B13Snva4I2s+IAxuRDemWftLM9K7O5vRVQS8Qz7IXBEe99y4zBT7eLA84eBV4wWbyKvdu45+NeZdXvx8pAc2A==",
+  "success": true,
+  "projectFilePath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj",
+  "expectedPackageFiles": [
+    "/home/dant/.nuget/packages/atksharp/3.24.24.95/atksharp.3.24.24.95.nupkg.sha512",
+    "/home/dant/.nuget/packages/cairosharp/3.24.24.95/cairosharp.3.24.24.95.nupkg.sha512",
+    "/home/dant/.nuget/packages/gdksharp/3.24.24.95/gdksharp.3.24.24.95.nupkg.sha512",
+    "/home/dant/.nuget/packages/giosharp/3.24.24.95/giosharp.3.24.24.95.nupkg.sha512",
+    "/home/dant/.nuget/packages/glibsharp/3.24.24.95/glibsharp.3.24.24.95.nupkg.sha512",
+    "/home/dant/.nuget/packages/gtksharp/3.24.24.95/gtksharp.3.24.24.95.nupkg.sha512",
+    "/home/dant/.nuget/packages/pangosharp/3.24.24.95/pangosharp.3.24.24.95.nupkg.sha512"
+  ],
+  "logs": []
+}

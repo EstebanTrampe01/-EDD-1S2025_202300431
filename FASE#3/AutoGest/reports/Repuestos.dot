@@ -1,0 +1,33 @@
+digraph AVL {
+node [shape=record];
+rankdir=TB;
+node8 [label="<f0> | <f1> ID: 8\nRepuesto: Correa de distribución\nDetalles: Componente que sincroniza el motor.\nCosto: 80\nFB: 0 | <f2>"];
+node4 [label="<f0> | <f1> ID: 4\nRepuesto: Pastillas de freno traseras\nDetalles: Piezas para frenar el vehículo en la parte trasera.\nCosto: 45,3\nFB: 0 | <f2>"];
+node2 [label="<f0> | <f1> ID: 2\nRepuesto: Bujías\nDetalles: Componente esencial para encender la mezcla de aire y combustible.\nCosto: 15,75\nFB: 0 | <f2>"];
+node1 [label="<f0> | <f1> ID: 1\nRepuesto: Filtro de aceite\nDetalles: Filtra impurezas del aceite del motor.\nCosto: 25,5\nFB: 0 | <f2>"];
+node3 [label="<f0> | <f1> ID: 3\nRepuesto: Frenos delanteros\nDetalles: Piezas para frenar el vehículo en la parte delantera.\nCosto: 60\nFB: 0 | <f2>"];
+node6 [label="<f0> | <f1> ID: 6\nRepuesto: Aceite de motor\nDetalles: Lubricante para el motor del vehículo.\nCosto: 18,6\nFB: 0 | <f2>"];
+node5 [label="<f0> | <f1> ID: 5\nRepuesto: Amortiguadores\nDetalles: Componente de suspensión para absorber impactos.\nCosto: 95,2\nFB: 0 | <f2>"];
+node7 [label="<f0> | <f1> ID: 7\nRepuesto: Filtro de aire\nDetalles: Filtra el aire que entra al motor para mejorar la combustión.\nCosto: 22,1\nFB: 0 | <f2>"];
+node12 [label="<f0> | <f1> ID: 12\nRepuesto: Espejos laterales\nDetalles: Espejos para una mejor visibilidad en el vehículo.\nCosto: 50\nFB: 0 | <f2>"];
+node10 [label="<f0> | <f1> ID: 10\nRepuesto: Batería\nDetalles: Fuente de energía para el vehículo.\nCosto: 100,5\nFB: 0 | <f2>"];
+node9 [label="<f0> | <f1> ID: 9\nRepuesto: Radiador\nDetalles: Sistema para mantener el motor a temperatura adecuada.\nCosto: 150\nFB: 0 | <f2>"];
+node11 [label="<f0> | <f1> ID: 11\nRepuesto: Cables de encendido\nDetalles: Conducen energía desde la batería a las bujías.\nCosto: 30,4\nFB: 0 | <f2>"];
+node14 [label="<f0> | <f1> ID: 14\nRepuesto: Suspensión trasera\nDetalles: Sistema que absorbe impactos en la parte trasera del vehículo.\nCosto: 120\nFB: 0 | <f2>"];
+node13 [label="<f0> | <f1> ID: 13\nRepuesto: Manguera de radiador\nDetalles: Transporta el líquido refrigerante en el sistema de enfriamiento.\nCosto: 20,8\nFB: 0 | <f2>"];
+node15 [label="<f0> | <f1> ID: 15\nRepuesto: Bombas de freno\nDetalles: Componente que genera presión para accionar los frenos.\nCosto: 75\nFB: 0 | <f2>"];
+"node8":f0 -> "node4":f1;
+"node4":f0 -> "node2":f1;
+"node2":f0 -> "node1":f1;
+"node2":f2 -> "node3":f1;
+"node4":f2 -> "node6":f1;
+"node6":f0 -> "node5":f1;
+"node6":f2 -> "node7":f1;
+"node8":f2 -> "node12":f1;
+"node12":f0 -> "node10":f1;
+"node10":f0 -> "node9":f1;
+"node10":f2 -> "node11":f1;
+"node12":f2 -> "node14":f1;
+"node14":f0 -> "node13":f1;
+"node14":f2 -> "node15":f1;
+}
