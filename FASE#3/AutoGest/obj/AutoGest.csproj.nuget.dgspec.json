@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj": {}
+    "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/AutoGest.csproj": {}
   },
   "projects": {
-    "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj": {
+    "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/AutoGest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj",
+        "projectUniqueName": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/AutoGest.csproj",
         "projectName": "AutoGest",
-        "projectPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj",
+        "projectPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/AutoGest.csproj",
         "packagesPath": "/home/dant/.nuget/packages/",
-        "outputPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/obj/",
+        "outputPath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/dant/.nuget/NuGet/NuGet.Config"
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.114/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.115/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

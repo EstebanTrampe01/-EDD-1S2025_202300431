@@ -1,0 +1,6 @@
+digraph Blockchain {
+    node [shape=record, style=filled, fontname="Arial"];
+    Block0 [label="{ INDEX: 0 | TIMESTAMP: 2025-04-15T07:10:40Z | ID: 0 | Nombre:  | contrasena:  | HASH: 000009 | PREV: 0000 }"];
+    Block0 -> Block1;
+    Block1 [label="{ INDEX: 1 | TIMESTAMP: 2025-04-15T07:10:52Z | ID: 11 | Nombre: 11 | contrasena: 11 | HASH: 000011 | PREV: 000009 }"];
+}

@@ -5,11 +5,12 @@ using Repuestos;
 using Vehiculos;
 using Facturas;
 using Servicios;
+using AutoGest;
 
 class Program
 {
     // Declaramos las estructuras de datos como variables estáticas
-    public static ListaSimple<Usuario> listaUsuarios;
+    public static UserBlockchain listaUsuarios;
     public static ArbolAVL arbolRepuestos;
     public static ListaDoblementeEnlazada listaVehiculos;
     public static ArbolB arbolFacturas;
@@ -20,15 +21,14 @@ class Program
         Application.Init();
 
         // Inicializar las estructuras de datos
-        listaUsuarios = new ListaSimple<Usuario>();
+        listaUsuarios = new UserBlockchain();
         arbolRepuestos = new ArbolAVL();
         listaVehiculos = new ListaDoblementeEnlazada();
         arbolFacturas = new ArbolB();
         arbolServicios = new ArbolBinario();
 
-        // Crear la ventana de login
-        Login login = new Login();
-        login.ShowAll();
+        InterfazMain interfazMain = new InterfazMain();
+        interfazMain.ShowAll();
 
         Application.Run();
     }

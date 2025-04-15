@@ -88,7 +88,6 @@ namespace Repuestos
             root = InsertarRecursivo(root, nuevoNodo);
 
             // Generar gráfico
-            GenerarGrafico("Repuestos.dot");
         }
 
         // Función recursiva para insertar un nodo en el árbol
@@ -158,7 +157,7 @@ namespace Repuestos
         public void Eliminar(int id)
         {
             root = EliminarRecursivo(root, id);
-            GenerarGrafico("Repuestos.dot");
+            GenerarGrafico("Repuetos.dot");
         }
 
         // Función recursiva para eliminar un nodo del árbol
@@ -297,7 +296,6 @@ namespace Repuestos
                 pRepuesto->Costo = nuevoCosto;
 
                 Console.WriteLine("Repuesto modificado exitosamente.");
-                GenerarGrafico("Repuestos.dot");
             }
             else
             {
@@ -596,5 +594,50 @@ namespace Repuestos
                 Marshal.FreeHGlobal((IntPtr)node);
             }
         }
+
+        // Obtener una lista de todos los repuestos (recorrido pre-order)
+        public string ObtenerListaPreOrden()
+        {
+            if (root == null) 
+                return "Árbol vacío.";
+
+            List<string> arbolRepuestos = new List<string>();
+            ObtenerListaPreOrdenRecursivo(root, arbolRepuestos);
+            return string.Join("\n", arbolRepuestos);
+        }
+
+        // Recorrer el árbol en pre-order para obtener la lista de repuestos
+        private void ObtenerListaPreOrdenRecursivo(NodoAVL* node, List<string> lista)
+        {
+            if (node != null)
+            {
+                lista.Add(node->Repuesto.ToString());
+                ObtenerListaPreOrdenRecursivo(node->Left, lista);
+                ObtenerListaPreOrdenRecursivo(node->Right, lista);
+            }
+        }
+
+        // Obtener una lista de todos los repuestos (recorrido post-order)
+        public string ObtenerListaPostOrden()
+        {
+            if (root == null) 
+                return "Árbol vacío.";
+
+            List<string> arbolRepuestos = new List<string>();
+            ObtenerListaPostOrdenRecursivo(root, arbolRepuestos);
+            return string.Join("\n", arbolRepuestos);
+        }
+
+        // Recorrer el árbol en post-order para obtener la lista de repuestos
+        private void ObtenerListaPostOrdenRecursivo(NodoAVL* node, List<string> lista)
+        {
+            if (node != null)
+            {
+                ObtenerListaPostOrdenRecursivo(node->Left, lista);
+                ObtenerListaPostOrdenRecursivo(node->Right, lista);
+                lista.Add(node->Repuesto.ToString());
+            }
+        }
+
     }
 }

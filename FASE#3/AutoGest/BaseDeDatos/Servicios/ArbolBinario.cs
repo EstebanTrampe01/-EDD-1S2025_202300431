@@ -8,204 +8,163 @@ namespace Servicios
     public class ArbolBinario
     {
         private NodoBinario raiz;
-        private Random random = new Random(); // Para inserción semi-aleatoria
 
         public ArbolBinario()
         {
             raiz = null;
         }
 
-        // Método para insertar un servicio en el árbol
+        /// <summary>
+        /// Inserta un servicio en el árbol binario de búsqueda.
+        /// </summary>
         public void Insertar(Servicio servicio)
         {
-            // Método 1: Inserción con factor aleatorio para balancear mejor
-            raiz = InsertarBalanceado(raiz, servicio);
-            GenerarGrafico("Servicios.dot");
+            raiz = InsertarRecursivo(raiz, servicio);
+            ;
         }
 
-        private NodoBinario InsertarBalanceado(NodoBinario actual, Servicio servicio)
+        private NodoBinario InsertarRecursivo(NodoBinario nodo, Servicio servicio)
         {
-            // Si el nodo actual es nulo, crear un nuevo nodo
-            if (actual == null)
-            {
-                return new NodoBinario(servicio);
-            }
-
-            // Usar un factor aleatorio para decidir izquierda o derecha
-            // Esto ayuda a crear un árbol más balanceado
-            bool irIzquierda;
-            
-            if (actual.Data.ID == servicio.ID)
-            {
-                // Si el ID ya existe, simplemente actualizamos la información
-                actual.Data = servicio;
-                return actual;
-            }
-            else if (servicio.ID < actual.Data.ID)
-            {
-                // Si el ID es menor, tendencia a ir a la izquierda (70% de probabilidad)
-                irIzquierda = random.Next(100) < 70;
-            }
-            else
-            {
-                // Si el ID es mayor, tendencia a ir a la derecha (70% de probabilidad)
-                irIzquierda = random.Next(100) < 30;
-            }
-
-            // Insertar en el subárbol correspondiente
-            if (irIzquierda)
-            {
-                actual.Izquierda = InsertarBalanceado(actual.Izquierda, servicio);
-            }
-            else
-            {
-                actual.Derecha = InsertarBalanceado(actual.Derecha, servicio);
-            }
-
-            return actual;
-        }
-
-        // Alternativa: Método para insertar utilizando la altura para balancear
-        public void InsertarPorAltura(Servicio servicio)
-        {
-            raiz = InsertarPorAlturaRecursivo(raiz, servicio);
-            GenerarGrafico("Servicios.dot");
-        }
-
-        private NodoBinario InsertarPorAlturaRecursivo(NodoBinario actual, Servicio servicio)
-        {
-            if (actual == null)
-            {
-                return new NodoBinario(servicio);
-            }
-
-            // Calcular las alturas de los subárboles
-            int alturaIzq = ObtenerAltura(actual.Izquierda);
-            int alturaDer = ObtenerAltura(actual.Derecha);
-
-            // Insertar en el subárbol con menor altura para mantener el árbol balanceado
-            if (alturaIzq <= alturaDer)
-            {
-                actual.Izquierda = InsertarPorAlturaRecursivo(actual.Izquierda, servicio);
-            }
-            else
-            {
-                actual.Derecha = InsertarPorAlturaRecursivo(actual.Derecha, servicio);
-            }
-
-            return actual;
-        }
-
-        private int ObtenerAltura(NodoBinario nodo)
-        {
+            // Si el nodo es null, crear un nuevo nodo
             if (nodo == null)
-                return -1;
-            
-            int alturaIzq = ObtenerAltura(nodo.Izquierda);
-            int alturaDer = ObtenerAltura(nodo.Derecha);
-            
-            return 1 + Math.Max(alturaIzq, alturaDer);
+            {
+                return new NodoBinario(servicio);
+            }
+
+            // Si ya existe un servicio con el mismo ID, actualizamos los datos
+            if (servicio.ID == nodo.Data.ID)
+            {
+                nodo.Data = servicio;
+                return nodo;
+            }
+
+            // Insertar en el subárbol correspondiente según el ID
+            if (servicio.ID < nodo.Data.ID)
+            {
+                nodo.Izquierda = InsertarRecursivo(nodo.Izquierda, servicio);
+            }
+            else
+            {
+                nodo.Derecha = InsertarRecursivo(nodo.Derecha, servicio);
+            }
+
+            return nodo;
         }
 
-        // Para mantener la compatibilidad con el código anterior, la función Encolar ahora usa InsertarPorAltura
-        public void Encolar(Servicio servicio)
-        {
-            InsertarPorAltura(servicio);
-        }
-
-        // Método para buscar un servicio por ID
+        /// <summary>
+        /// Busca un servicio por su ID.
+        /// </summary>
         public Servicio Buscar(int id)
         {
             return BuscarRecursivo(raiz, id);
         }
 
-        private Servicio BuscarRecursivo(NodoBinario actual, int id)
+        private Servicio BuscarRecursivo(NodoBinario nodo, int id)
         {
-            if (actual == null)
+            // Si el nodo es null o encontramos el ID
+            if (nodo == null)
             {
                 return null;
             }
             
-            if (id == actual.Data.ID)
+            // Si encontramos el ID
+            if (id == nodo.Data.ID)
             {
-                return actual.Data;
+                return nodo.Data;
             }
-
-            // Buscar en ambos subárboles
-            Servicio izq = BuscarRecursivo(actual.Izquierda, id);
-            if (izq != null)
-                return izq;
             
-            return BuscarRecursivo(actual.Derecha, id);
+            // Buscar en el subárbol correspondiente
+            if (id < nodo.Data.ID)
+            {
+                return BuscarRecursivo(nodo.Izquierda, id);
+            }
+            else
+            {
+                return BuscarRecursivo(nodo.Derecha, id);
+            }
         }
 
-        // El resto del código permanece igual...
-        // Método para eliminar un servicio por ID
+        /// <summary>
+        /// Elimina un servicio por su ID y devuelve el servicio eliminado.
+        /// </summary>
         public Servicio Eliminar(int id)
         {
             Servicio servicioEliminado = Buscar(id);
             if (servicioEliminado != null)
             {
                 raiz = EliminarRecursivo(raiz, id);
-                GenerarGrafico("Servicios.dot");
+                ;
             }
             return servicioEliminado;
         }
 
-        private NodoBinario EliminarRecursivo(NodoBinario actual, int id)
+        private NodoBinario EliminarRecursivo(NodoBinario nodo, int id)
         {
-            if (actual == null)
+            // Si el nodo es null, no hay nada que eliminar
+            if (nodo == null)
             {
                 return null;
             }
 
-            // Si encontramos el nodo a eliminar
-            if (actual.Data.ID == id)
+            // Buscar el nodo a eliminar
+            if (id < nodo.Data.ID)
+            {
+                nodo.Izquierda = EliminarRecursivo(nodo.Izquierda, id);
+            }
+            else if (id > nodo.Data.ID)
+            {
+                nodo.Derecha = EliminarRecursivo(nodo.Derecha, id);
+            }
+            else
             {
                 // Caso 1: Nodo sin hijos
-                if (actual.Izquierda == null && actual.Derecha == null)
+                if (nodo.Izquierda == null && nodo.Derecha == null)
                 {
                     return null;
                 }
                 // Caso 2: Nodo con un solo hijo
-                if (actual.Izquierda == null)
+                if (nodo.Izquierda == null)
                 {
-                    return actual.Derecha;
+                    return nodo.Derecha;
                 }
-                if (actual.Derecha == null)
+                if (nodo.Derecha == null)
                 {
-                    return actual.Izquierda;
+                    return nodo.Izquierda;
                 }
                 
                 // Caso 3: Nodo con dos hijos
                 // Encontrar el sucesor inorden (el menor valor en el subárbol derecho)
-                actual.Data = EncontrarMinimo(actual.Derecha);
+                Servicio sucesor = EncontrarMinimo(nodo.Derecha);
+                nodo.Data = sucesor;
+                
                 // Eliminar el sucesor inorden
-                actual.Derecha = EliminarRecursivo(actual.Derecha, actual.Data.ID);
-            }
-            else
-            {
-                // Buscar en ambos subárboles
-                actual.Izquierda = EliminarRecursivo(actual.Izquierda, id);
-                actual.Derecha = EliminarRecursivo(actual.Derecha, id);
+                nodo.Derecha = EliminarRecursivo(nodo.Derecha, sucesor.ID);
             }
 
-            return actual;
+            return nodo;
         }
 
-        // Método para encontrar el servicio con el ID mínimo en un subárbol
+        /// <summary>
+        /// Encuentra el servicio con el ID mínimo en un subárbol.
+        /// </summary>
         private Servicio EncontrarMinimo(NodoBinario nodo)
         {
-            Servicio minValor = nodo.Data;
-            while (nodo.Izquierda != null)
+            if (nodo == null)
             {
-                nodo = nodo.Izquierda;
-                minValor = nodo.Data;
+                return null;
             }
-            return minValor;
+            
+            if (nodo.Izquierda == null)
+            {
+                return nodo.Data;
+            }
+            
+            return EncontrarMinimo(nodo.Izquierda);
         }
 
-        // Los métodos para visualización y otros permanecen igual
+        /// <summary>
+        /// Imprime todos los servicios en el árbol en orden.
+        /// </summary>
         public void Print()
         {
             if (raiz == null)
@@ -216,7 +175,7 @@ namespace Servicios
 
             Console.WriteLine("Servicios en el árbol:");
             RecorridoInOrden(raiz);
-            GenerarGrafico("Servicios.dot");
+            ;
         }
 
         private void RecorridoInOrden(NodoBinario nodo)
@@ -229,31 +188,153 @@ namespace Servicios
             }
         }
 
-        public Servicio Desencolar()
+        /// <summary>
+        /// Alias para buscar un servicio por su ID. Mantenido por compatibilidad.
+        /// </summary>
+        public Servicio BuscarServicioPorId(int id)
         {
-            if (raiz == null)
+            return Buscar(id);
+        }
+        
+        /// <summary>
+        /// Obtiene una lista con todos los servicios en recorrido InOrden.
+        /// </summary>
+        public List<Servicio> RecorridoInOrden()
+        {
+            List<Servicio> servicios = new List<Servicio>();
+            RecorridoInOrdenALista(raiz, servicios);
+            return servicios;
+        }
+        
+        private void RecorridoInOrdenALista(NodoBinario nodo, List<Servicio> servicios)
+        {
+            if (nodo != null)
             {
-                return null;
+                RecorridoInOrdenALista(nodo.Izquierda, servicios);
+                servicios.Add(nodo.Data);
+                RecorridoInOrdenALista(nodo.Derecha, servicios);
             }
-
-            // Encontrar el servicio con el ID mínimo (o el más a la izquierda)
-            Servicio servicioMinimo = EncontrarServicioMasIzquierda(raiz);
-            
-            // Eliminar y devolver ese servicio
-            raiz = EliminarRecursivo(raiz, servicioMinimo.ID);
-            GenerarGrafico("Servicios.dot");
-            
-            return servicioMinimo;
         }
-
-        private Servicio EncontrarServicioMasIzquierda(NodoBinario nodo)
+        
+        /// <summary>
+        /// Obtiene una lista con todos los servicios en recorrido PreOrden.
+        /// </summary>
+        public List<Servicio> RecorridoPreOrden()
         {
-            if (nodo.Izquierda == null)
-                return nodo.Data;
-            return EncontrarServicioMasIzquierda(nodo.Izquierda);
+            List<Servicio> servicios = new List<Servicio>();
+            RecorridoPreOrdenALista(raiz, servicios);
+            return servicios;
+        }
+        
+        private void RecorridoPreOrdenALista(NodoBinario nodo, List<Servicio> servicios)
+        {
+            if (nodo != null)
+            {
+                servicios.Add(nodo.Data);
+                RecorridoPreOrdenALista(nodo.Izquierda, servicios);
+                RecorridoPreOrdenALista(nodo.Derecha, servicios);
+            }
+        }
+        
+        /// <summary>
+        /// Obtiene una lista con todos los servicios en recorrido PostOrden.
+        /// </summary>
+        public List<Servicio> RecorridoPostOrden()
+        {
+            List<Servicio> servicios = new List<Servicio>();
+            RecorridoPostOrdenALista(raiz, servicios);
+            return servicios;
+        }
+        
+        private void RecorridoPostOrdenALista(NodoBinario nodo, List<Servicio> servicios)
+        {
+            if (nodo != null)
+            {
+                RecorridoPostOrdenALista(nodo.Izquierda, servicios);
+                RecorridoPostOrdenALista(nodo.Derecha, servicios);
+                servicios.Add(nodo.Data);
+            }
+        }
+        
+        /// <summary>
+        /// Obtiene los servicios de un vehículo específico en recorrido InOrden.
+        /// </summary>
+        public List<Servicio> ObtenerServiciosPorVehiculoInOrden(int idVehiculo)
+        {
+            List<Servicio> servicios = new List<Servicio>();
+            ObtenerServiciosPorVehiculoInOrdenRecursivo(raiz, idVehiculo, servicios);
+            return servicios;
+        }
+        
+        private void ObtenerServiciosPorVehiculoInOrdenRecursivo(NodoBinario nodo, int idVehiculo, List<Servicio> servicios)
+        {
+            if (nodo != null)
+            {
+                // Recorrido In-Orden: izquierda, raíz, derecha
+                ObtenerServiciosPorVehiculoInOrdenRecursivo(nodo.Izquierda, idVehiculo, servicios);
+                
+                if (nodo.Data.Id_Vehiculo == idVehiculo)
+                {
+                    servicios.Add(nodo.Data);
+                }
+                
+                ObtenerServiciosPorVehiculoInOrdenRecursivo(nodo.Derecha, idVehiculo, servicios);
+            }
+        }
+        
+        /// <summary>
+        /// Obtiene los servicios de un vehículo específico en recorrido PreOrden.
+        /// </summary>
+        public List<Servicio> ObtenerServiciosPorVehiculoPreOrden(int idVehiculo)
+        {
+            List<Servicio> servicios = new List<Servicio>();
+            ObtenerServiciosPorVehiculoPreOrdenRecursivo(raiz, idVehiculo, servicios);
+            return servicios;
+        }
+        
+        private void ObtenerServiciosPorVehiculoPreOrdenRecursivo(NodoBinario nodo, int idVehiculo, List<Servicio> servicios)
+        {
+            if (nodo != null)
+            {
+                // Recorrido Pre-Orden: raíz, izquierda, derecha
+                if (nodo.Data.Id_Vehiculo == idVehiculo)
+                {
+                    servicios.Add(nodo.Data);
+                }
+                
+                ObtenerServiciosPorVehiculoPreOrdenRecursivo(nodo.Izquierda, idVehiculo, servicios);
+                ObtenerServiciosPorVehiculoPreOrdenRecursivo(nodo.Derecha, idVehiculo, servicios);
+            }
+        }
+        
+        /// <summary>
+        /// Obtiene los servicios de un vehículo específico en recorrido PostOrden.
+        /// </summary>
+        public List<Servicio> ObtenerServiciosPorVehiculoPostOrden(int idVehiculo)
+        {
+            List<Servicio> servicios = new List<Servicio>();
+            ObtenerServiciosPorVehiculoPostOrdenRecursivo(raiz, idVehiculo, servicios);
+            return servicios;
+        }
+        
+        private void ObtenerServiciosPorVehiculoPostOrdenRecursivo(NodoBinario nodo, int idVehiculo, List<Servicio> servicios)
+        {
+            if (nodo != null)
+            {
+                // Recorrido Post-Orden: izquierda, derecha, raíz
+                ObtenerServiciosPorVehiculoPostOrdenRecursivo(nodo.Izquierda, idVehiculo, servicios);
+                ObtenerServiciosPorVehiculoPostOrdenRecursivo(nodo.Derecha, idVehiculo, servicios);
+                
+                if (nodo.Data.Id_Vehiculo == idVehiculo)
+                {
+                    servicios.Add(nodo.Data);
+                }
+            }
         }
 
-        // Los métodos para generar gráficos se mantienen iguales
+        /// <summary>
+        /// Genera una visualización gráfica del árbol binario.
+        /// </summary>
         public void GenerarGrafico(string fileName)
         {
             string carpeta = Path.Combine(Directory.GetCurrentDirectory(), "reports");

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6B13Snva4I2s+IAxuRDemWftLM9K7O5vRVQS8Qz7IXBEe99y4zBT7eLA84eBV4wWbyKvdu45+NeZdXvx8pAc2A==",
+  "dgSpecHash": "tNYdHBuhwQvwpytfGfdEyZcgQR7qQ/+fhUIIfE6OQUf8CBEaR9ytwY0JWMeURaGXmXNWAqwUVOw19o3WTSQUMA==",
   "success": true,
-  "projectFilePath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#2/AutoGest/AutoGest.csproj",
+  "projectFilePath": "/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/AutoGest.csproj",
   "expectedPackageFiles": [
     "/home/dant/.nuget/packages/atksharp/3.24.24.95/atksharp.3.24.24.95.nupkg.sha512",
     "/home/dant/.nuget/packages/cairosharp/3.24.24.95/cairosharp.3.24.24.95.nupkg.sha512",

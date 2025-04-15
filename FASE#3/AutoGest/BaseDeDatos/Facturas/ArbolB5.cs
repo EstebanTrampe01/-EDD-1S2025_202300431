@@ -15,7 +15,7 @@ namespace Facturas
         public List<Factura> Claves { get; set; }
         public List<NodoArbolB> Hijos { get; set; }
         public bool EsHoja { get; set; }
-        public string Tag { get; set; } // Agregar propiedad Tag para identificación en el gráfico
+        public string Tag { get; set; } // Propiedad Tag para identificación en el gráfico
 
         public NodoArbolB()
         {
@@ -37,9 +37,6 @@ namespace Facturas
             return Claves.Count >= MIN_CLAVES;
         }
     }
-    
-    // El resto del código del ArbolB permanece igual...
-
 
     public class ArbolB
     {
@@ -53,8 +50,8 @@ namespace Facturas
             raiz = new NodoArbolB();
         }
 
-        // Método para insertar una nueva factura (equivalente a Push)
-        public void Push(Factura factura)
+        // Método para insertar una nueva factura en el árbol
+        public void Insertar(Factura factura)
         {
             // Si la raíz está llena, se crea una nueva raíz
             if (raiz.EstaLleno())
@@ -154,37 +151,6 @@ namespace Facturas
             }
         }
 
-        // Método para obtener y eliminar la factura del árbol (equivalente a Pop)
-        public Factura Pop()
-        {
-            if (raiz == null || raiz.Claves.Count == 0)
-            {
-                return null;
-            }
-
-            // En un Árbol B, Pop podría ser eliminar la factura con el ID más alto
-            // para simular un comportamiento LIFO similar a una ArbolB
-            Factura ultimaFactura = ObtenerFacturaMasReciente();
-            Eliminar(ultimaFactura.ID);
-            GenerarGrafico("Facturacion.dot");
-            return ultimaFactura;
-        }
-
-        // Obtiene la factura más reciente (mayor ID, asumiendo que IDs más altos son más recientes)
-        private Factura ObtenerFacturaMasReciente()
-        {
-            NodoArbolB actual = raiz;
-            
-            // Navegar hasta el nodo más a la derecha
-            while (!actual.EsHoja)
-            {
-                actual = actual.Hijos[actual.Hijos.Count - 1];
-            }
-            
-            // Retorna la última clave (factura con mayor ID)
-            return actual.Claves[actual.Claves.Count - 1];
-        }
-
         // Busca una factura por su ID
         public Factura Buscar(int id)
         {
@@ -217,9 +183,18 @@ namespace Facturas
         }
 
         // Método para eliminar una factura por su ID
-        public void Eliminar(int id)
+        public bool Eliminar(int id)
         {
-            EliminarRecursivo(raiz, id);
+            // Primero verificar si la factura existe
+            Factura facturaExistente = Buscar(id);
+            if (facturaExistente == null)
+            {
+                return false; // No se encontró la factura
+            }
+            
+            bool[] eliminado = { false }; // Array para usar como referencia y poder modificar su valor
+            
+            EliminarRecursivo(raiz, id, eliminado);
             
             // Si la raíz quedó vacía pero tiene hijos, el primer hijo se convierte en la nueva raíz
             if (raiz.Claves.Count == 0 && !raiz.EsHoja && raiz.Hijos.Count > 0)
@@ -229,9 +204,10 @@ namespace Facturas
             }
 
             GenerarGrafico("Facturacion.dot");
+            return eliminado[0];
         }
 
-        private void EliminarRecursivo(NodoArbolB nodo, int id)
+        private void EliminarRecursivo(NodoArbolB nodo, int id, bool[] eliminado)
         {
             int indice = EncontrarIndice(nodo, id);
 
@@ -242,11 +218,13 @@ namespace Facturas
                 if (nodo.EsHoja)
                 {
                     nodo.Claves.RemoveAt(indice);
+                    eliminado[0] = true; // Marcar como eliminado exitosamente
                 }
                 else
                 {
                     // Si no es hoja, usamos estrategias más complejas
                     EliminarDeNodoInterno(nodo, indice);
+                    eliminado[0] = true; // Marcar como eliminado exitosamente
                 }
             }
             else
@@ -273,11 +251,11 @@ namespace Facturas
                     // Si el último hijo se fusionó, recurrimos al hijo anterior
                     if (ultimoHijo && indice > nodo.Hijos.Count - 1)
                     {
-                        EliminarRecursivo(nodo.Hijos[indice - 1], id);
+                        EliminarRecursivo(nodo.Hijos[indice - 1], id, eliminado);
                     }
                     else
                     {
-                        EliminarRecursivo(nodo.Hijos[indice], id);
+                        EliminarRecursivo(nodo.Hijos[indice], id, eliminado);
                     }
                 }
             }
@@ -305,7 +283,8 @@ namespace Facturas
                 // Reemplazar clave con el predecesor
                 Factura predecesor = ObtenerPredecesor(nodo, indice);
                 nodo.Claves[indice] = predecesor;
-                EliminarRecursivo(nodo.Hijos[indice], predecesor.ID);
+                bool[] temp = { false };
+                EliminarRecursivo(nodo.Hijos[indice], predecesor.ID, temp);
             }
             // Caso 2b: Si el hijo siguiente tiene más del mínimo de claves
             else if (indice + 1 < nodo.Hijos.Count && nodo.Hijos[indice + 1].Claves.Count > MIN_CLAVES)
@@ -313,14 +292,16 @@ namespace Facturas
                 // Reemplazar clave con el sucesor
                 Factura sucesor = ObtenerSucesor(nodo, indice);
                 nodo.Claves[indice] = sucesor;
-                EliminarRecursivo(nodo.Hijos[indice + 1], sucesor.ID);
+                bool[] temp = { false };
+                EliminarRecursivo(nodo.Hijos[indice + 1], sucesor.ID, temp);
             }
             // Caso 2c: Si ambos hijos tienen el mínimo de claves
             else if (indice + 1 < nodo.Hijos.Count)
             {
                 // Fusionar el hijo actual con el siguiente
                 FusionarNodos(nodo, indice);
-                EliminarRecursivo(nodo.Hijos[indice], clave.ID);
+                bool[] temp = { false };
+                EliminarRecursivo(nodo.Hijos[indice], clave.ID, temp);
             }
         }
 
@@ -459,7 +440,7 @@ namespace Facturas
                 nodo.Hijos.RemoveAt(indice + 1);
         }
 
-        // Imprime las facturas (similar al método Print original)
+        // Imprime las facturas en orden
         public void Print()
         {
             List<Factura> facturas = RecorridoInOrden();
@@ -514,17 +495,16 @@ namespace Facturas
             using (StreamWriter writer = new StreamWriter(filePath))
             {
                 writer.WriteLine("digraph BTree {");
-                writer.WriteLine("    node [shape=record];");
+                writer.WriteLine("    node [shape=record, style=filled, fillcolor=lightblue];");
                 writer.WriteLine("    rankdir=TB;");
                 
                 int contadorNodos = 0;
-                GraficarNodos(raiz, writer, ref contadorNodos);
-                GraficarConexiones(raiz, writer);
+                GenerarNodosGrafico(raiz, writer, ref contadorNodos);
+                GenerarConexionesGrafico(raiz, writer);
                 
                 writer.WriteLine("}");
             }
-
-            // Generar el archivo PNG usando Graphviz
+            
             var process = new Process();
             process.StartInfo.FileName = "dot";
             process.StartInfo.Arguments = $"-Tpng {filePath} -o {Path.Combine(carpeta, Path.ChangeExtension(fileName, ".png"))}";
@@ -533,56 +513,108 @@ namespace Facturas
             process.StartInfo.CreateNoWindow = true;
             process.Start();
             process.WaitForExit();
-
-            // Mostrar la URL en la consola
+            
             Console.WriteLine("La gráfica del árbol B se ha guardado en: " + Path.GetFullPath(Path.Combine(carpeta, Path.ChangeExtension(fileName, ".png"))));
         }
-
-                private void GraficarNodos(NodoArbolB nodo, StreamWriter writer, ref int contadorNodos)
-        {
-            if (nodo == null)
-                return;
         
-            string nodeId = $"node{contadorNodos++}";
+        private void GenerarNodosGrafico(NodoArbolB nodo, StreamWriter writer, ref int contadorNodos)
+        {
+            if (nodo == null) return;
             
-            // Construir la etiqueta del nodo
-            StringBuilder label = new StringBuilder("{");
+            // Asignar un identificador único al nodo si no tiene uno
+            if (string.IsNullOrEmpty(nodo.Tag))
+            {
+                nodo.Tag = "nodo" + contadorNodos++;
+            }
+            
+            // Crear la etiqueta del nodo con todas sus claves
+            StringBuilder sb = new StringBuilder();
+            sb.Append(nodo.Tag + " [label=\"");
             
             for (int i = 0; i < nodo.Claves.Count; i++)
             {
-                if (i > 0) label.Append("|");
-                label.Append($"<p{i}> ID: {nodo.Claves[i].ID}, Orden: {nodo.Claves[i].ID_Orden}, Total: {nodo.Claves[i].Total:F2}");
+                Factura factura = nodo.Claves[i];
+                sb.Append("<f" + i + ">");
+                sb.Append(" ID:" + factura.ID);
+                sb.Append("\\nOrden:" + factura.ID_Orden);
+                sb.Append("\\nTotal:$" + factura.Total.ToString("F2"));
+                
+                if (i < nodo.Claves.Count - 1)
+                {
+                    sb.Append(" | ");
+                }
             }
             
-            label.Append("}");
-            
-            writer.WriteLine($"    {nodeId} [label=\"{label}\"];");
-            
-            // Asignar un ID único a este nodo usando la propiedad Tag
-            nodo.Tag = nodeId;
+            sb.Append("\"];");
+            writer.WriteLine("    " + sb.ToString());
             
             // Generar nodos para los hijos
-            for (int i = 0; i < nodo.Hijos.Count; i++)
+            if (!nodo.EsHoja)
             {
-                GraficarNodos(nodo.Hijos[i], writer, ref contadorNodos);
+                for (int i = 0; i < nodo.Hijos.Count; i++)
+                {
+                    GenerarNodosGrafico(nodo.Hijos[i], writer, ref contadorNodos);
+                }
             }
         }
         
-        private void GraficarConexiones(NodoArbolB nodo, StreamWriter writer)
+        private void GenerarConexionesGrafico(NodoArbolB nodo, StreamWriter writer)
         {
-            if (nodo == null || nodo.EsHoja)
-                return;
-                
-            // Generar conexiones a los hijos
-            for (int i = 0; i < nodo.Hijos.Count; i++)
+            if (nodo == null) return;
+            
+            if (!nodo.EsHoja)
             {
-                if (nodo.Hijos[i] != null)
+                for (int i = 0; i < nodo.Hijos.Count; i++)
                 {
-                    int portIndex = Math.Min(i, nodo.Claves.Count - 1);
-                    writer.WriteLine($"    {nodo.Tag}:p{portIndex} -> {nodo.Hijos[i].Tag};");
-                    GraficarConexiones(nodo.Hijos[i], writer);
+                    NodoArbolB hijo = nodo.Hijos[i];
+                    
+                    if (hijo != null)
+                    {
+                        // Conectar el nodo padre con el hijo
+                        if (i == 0)
+                        {
+                            writer.WriteLine($"    {nodo.Tag}:f0 -> {hijo.Tag} [arrowhead=vee];");
+                        }
+                        else if (i == nodo.Hijos.Count - 1)
+                        {
+                            writer.WriteLine($"    {nodo.Tag}:f{i - 1} -> {hijo.Tag} [arrowhead=vee];");
+                        }
+                        else
+                        {
+                            writer.WriteLine($"    {nodo.Tag}:f{i - 1} -> {hijo.Tag} [arrowhead=vee];");
+                        }
+                        
+                        // Recursivamente generar conexiones para los hijos
+                        GenerarConexionesGrafico(hijo, writer);
+                    }
                 }
             }
+        }
+        
+        /// <summary>
+        /// Busca una factura por ID_Orden.
+        /// </summary>
+        public Factura BuscarPorOrden(int idOrden)
+        {
+            List<Factura> facturas = RecorridoInOrden();
+            foreach (var factura in facturas)
+            {
+                if (factura.ID_Orden == idOrden)
+                {
+                    return factura;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Implementa un método Push para mantener compatibilidad con el código anterior.
+        /// Este método simplemente llama a Insertar.
+        /// </summary>
+        public void Push(Factura factura)
+        {
+            // En lugar de implementar una pila, simplemente insertamos la factura en el árbol
+            Insertar(factura);
         }
     }
 }
