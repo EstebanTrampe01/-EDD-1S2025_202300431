@@ -33,7 +33,7 @@ namespace Usuarios
             }
         }
 
-        public void ModificarUsuario(int id, string nuevoNombre, string nuevoApellido, string nuevoCorreo, string nuevaContrasena)
+        public void ModificarUsuario(int id, string nuevoNombre, string nuevoApellido, string nuevoCorreo, int nuevaEdad,string nuevaContrasena)
         {
             Usuario usuario = Buscar(id);
             if (usuario != null)
@@ -42,6 +42,7 @@ namespace Usuarios
                 usuarioModificado.Name = nuevoNombre;
                 usuarioModificado.LastName = nuevoApellido;
                 usuarioModificado.Correo = nuevoCorreo;
+                usuarioModificado.Edad = nuevaEdad;
                 usuarioModificado.Contrasena = nuevaContrasena;
                 blockchain.AddBlock(usuarioModificado);
                 idToBlockIndex[id] = blockchain.Chain.Count - 1;
@@ -90,7 +91,7 @@ namespace Usuarios
                 Usuario usuario = block.Data;
                 if (!usuario.Correo.StartsWith("ELIMINADO_"))
                 {
-                    Console.WriteLine($"ID: {usuario.Id}, Nombre: {usuario.Name}, Apellido: {usuario.LastName}, Correo: {usuario.Correo}, Contraseña: {usuario.Contrasena}");
+                    Console.WriteLine($"ID: {usuario.Id}, Nombre: {usuario.Name}, Apellido: {usuario.LastName}, Correo: {usuario.Correo}, Edad: {usuario.Edad},Contraseña: {usuario.Contrasena}");
                 }
             }
         }
@@ -132,7 +133,7 @@ namespace Usuarios
                 Usuario usuario = block.Data;
                 if (!usuario.Correo.StartsWith("ELIMINADO_"))
                 {
-                    lista += $"ID: {usuario.Id}, Nombre: {usuario.Name}, Apellido: {usuario.LastName}, Correo: {usuario.Correo}, Contraseña: {usuario.Contrasena}\n";
+                    lista += $"ID: {usuario.Id}, Nombre: {usuario.Name}, Apellido: {usuario.LastName}, Correo: {usuario.Correo}, Edad: {usuario.Edad},Contraseña: {usuario.Contrasena}\n";
                 }
             }
             return lista;

@@ -99,10 +99,12 @@ namespace AutoGest.Interfaces
             Label labelNombresActual = new Label("Nombres: ");
             Label labelApellidosActual = new Label("Apellidos: ");
             Label labelCorreoActual = new Label("Correo: ");
+            Label labelEdadActual = new Label("Edad: ");
             Label labelContraseniaActual = new Label("Contraseña: ");
             vboxInfoActual.PackStart(labelNombresActual, false, false, 2);
             vboxInfoActual.PackStart(labelApellidosActual, false, false, 2);
             vboxInfoActual.PackStart(labelCorreoActual, false, false, 2);
+            vboxInfoActual.PackStart(labelEdadActual, false, false, 2);
             vboxInfoActual.PackStart(labelContraseniaActual, false, false, 2);
             frameInfoActual.Add(vboxInfoActual);
             
@@ -116,6 +118,7 @@ namespace AutoGest.Interfaces
             Entry entryNombresEditar = new Entry { Sensitive = false };
             Entry entryApellidosEditar = new Entry { Sensitive = false };
             Entry entryCorreoEditar = new Entry { Sensitive = false };
+            Entry entryEdadEditar = new Entry { Sensitive = false };
             Entry entryContraseniaEditar = new Entry { Sensitive = false };
             
             tableEditar.Attach(new Label("Nombres:"), 0, 1, 0, 1);
@@ -124,8 +127,10 @@ namespace AutoGest.Interfaces
             tableEditar.Attach(entryApellidosEditar, 1, 2, 1, 2);
             tableEditar.Attach(new Label("Correo:"), 0, 1, 2, 3);
             tableEditar.Attach(entryCorreoEditar, 1, 2, 2, 3);
-            tableEditar.Attach(new Label("Contraseña:"), 0, 1, 3, 4);
-            tableEditar.Attach(entryContraseniaEditar, 1, 2, 3, 4);
+            tableEditar.Attach(new Label("Edad:"), 0, 1, 3, 4);
+            tableEditar.Attach(entryEdadEditar, 1, 2, 3, 4);
+            tableEditar.Attach(new Label("Contraseña:"), 0, 1, 4, 5);
+            tableEditar.Attach(entryContraseniaEditar, 1, 2, 4, 5);
             
             frameNuevaInfo.Add(tableEditar);
             
@@ -152,16 +157,19 @@ namespace AutoGest.Interfaces
                         labelNombresActual.Text = $"Nombres: {usuario.Name}";
                         labelApellidosActual.Text = $"Apellidos: {usuario.LastName}";
                         labelCorreoActual.Text = $"Correo: {usuario.Correo}";
+                        labelEdadActual.Text = $"Edad: {usuario.Edad}";
                         labelContraseniaActual.Text = $"Contrasenia: {usuario.Contrasena}";
                     
                         entryNombresEditar.Text = usuario.Name;
                         entryApellidosEditar.Text = usuario.LastName;
                         entryCorreoEditar.Text = usuario.Correo;
+                        entryEdadEditar.Text = usuario.Edad.ToString();
                         entryContraseniaEditar.Text = usuario.Contrasena;
                     
                         entryNombresEditar.Sensitive = true;
                         entryApellidosEditar.Sensitive = true;
                         entryCorreoEditar.Sensitive = true;
+                        entryEdadEditar.Sensitive = true;
                         entryContraseniaEditar.Sensitive = true;
                         buttonEditarUsuario.Sensitive = true;
                     }
@@ -182,23 +190,26 @@ namespace AutoGest.Interfaces
                 int id;
                 if (int.TryParse(entryIdEditar.Text, out id))
                 {
-                    listaUsuarios.ModificarUsuario(id, entryNombresEditar.Text, entryApellidosEditar.Text, entryCorreoEditar.Text, entryContraseniaEditar.Text);
+                    listaUsuarios.ModificarUsuario(id, entryNombresEditar.Text, entryApellidosEditar.Text, entryCorreoEditar.Text, int.Parse(entryEdadEditar.Text), entryContraseniaEditar.Text);
 
                     // Limpiar los inputs después de actualizar
                     entryIdEditar.Text = "";
                     entryNombresEditar.Text = "";
                     entryApellidosEditar.Text = "";
                     entryCorreoEditar.Text = "";
+                    entryEdadEditar.Text = "";
                     entryContraseniaEditar.Text = "";
 
                     labelNombresActual.Text = "Nombres: ";
                     labelApellidosActual.Text = "Apellidos: ";
                     labelCorreoActual.Text = "Correo: ";
+                    labelEdadActual.Text = "Edad: ";
                     labelContraseniaActual.Text = "Contraseña: ";
 
                     entryNombresEditar.Sensitive = false;
                     entryApellidosEditar.Sensitive = false;
                     entryCorreoEditar.Sensitive = false;
+                    entryEdadEditar.Sensitive = false;
                     entryContraseniaEditar.Sensitive = false;
                     buttonEditarUsuario.Sensitive = false;
                     

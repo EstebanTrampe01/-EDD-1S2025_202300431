@@ -156,10 +156,11 @@ namespace AutoGest.Interfaces
                                 string name = element.GetProperty("Nombres").GetString();
                                 string lastName = element.GetProperty("Apellidos").GetString();
                                 string correo = element.GetProperty("Correo").GetString();
+                                int edad = element.GetProperty("Edad").GetInt32();
                                 string contrasena = element.GetProperty("Contrasenia").GetString();
 
-                                Usuario usuario = new Usuario(id, name, lastName, correo, contrasena);
-                                Console.WriteLine($"ID: {usuario.Id}, Nombres: {name}, Apellidos: {lastName}, Correo: {correo}, Contraseña: {contrasena}");
+                                Usuario usuario = new Usuario(id, name, lastName, correo, edad,contrasena);
+                                Console.WriteLine($"ID: {usuario.Id}, Nombres: {name}, Apellidos: {lastName}, Correo: {correo}, Edad: {edad},Contraseña: {contrasena}");
                                 listaUsuarios.Insertar(usuario);
                                 contadorElementos++;
                             }

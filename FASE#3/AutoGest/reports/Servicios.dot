@@ -1,4 +1,19 @@
 digraph G {
 node [shape=circle, style=filled, fillcolor=lightblue];
 rankdir=TB;
+node1 [label="ID: 1\nRepuesto: 2\nVehículo: 1\nCosto: $1,00"];
+node2 [label="ID: 2\nRepuesto: 2\nVehículo: 2\nCosto: $2,00"];
+node3 [label="ID: 3\nRepuesto: 3\nVehículo: 2\nCosto: $3,00"];
+node4 [label="ID: 4\nRepuesto: 4\nVehículo: 2\nCosto: $2,00"];
+node5 [label="ID: 5\nRepuesto: 4\nVehículo: 4\nCosto: $4,00"];
+node6 [label="ID: 6\nRepuesto: 4\nVehículo: 2\nCosto: $1,00"];
+node8 [label="ID: 8\nRepuesto: 4\nVehículo: 1\nCosto: $5,00"];
+node77 [label="ID: 77\nRepuesto: 4\nVehículo: 3\nCosto: $7,00"];
+node1 -> node2 [label="R"];
+node2 -> node3 [label="R"];
+node3 -> node4 [label="R"];
+node4 -> node5 [label="R"];
+node5 -> node6 [label="R"];
+node6 -> node8 [label="R"];
+node8 -> node77 [label="R"];
 }

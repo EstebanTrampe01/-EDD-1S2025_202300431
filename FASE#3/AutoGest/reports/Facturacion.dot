@@ -1,5 +1,11 @@
 digraph BTree {
     node [shape=record, style=filled, fillcolor=lightblue];
     rankdir=TB;
-    nodo0 [label=""];
+    nodo0 [label="<f0> ID:102\nOrden:2\nTotal:$4,00 | <f1> ID:104\nOrden:4\nTotal:$4,00"];
+    nodo0 [label="<f0> ID:101\nOrden:1\nTotal:$2,00"];
+    nodo1 [label="<f0> ID:103\nOrden:3\nTotal:$4,00 | <f1> ID:103\nOrden:3\nTotal:$5,00"];
+    nodo0 [label="<f0> ID:105\nOrden:5\nTotal:$8,00 | <f1> ID:106\nOrden:6\nTotal:$3,00 | <f2> ID:108\nOrden:8\nTotal:$6,00 | <f3> ID:177\nOrden:77\nTotal:$10,00"];
+    nodo0:f0 -> nodo0 [arrowhead=vee];
+    nodo0:f0 -> nodo1 [arrowhead=vee];
+    nodo0:f1 -> nodo0 [arrowhead=vee];
 }

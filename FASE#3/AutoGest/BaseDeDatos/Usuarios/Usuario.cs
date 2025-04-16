@@ -8,13 +8,16 @@ namespace Usuarios
         public string Correo { get; set; }
         public string Contrasena { get; set; }
 
+        public int Edad { get; set; } 
+
         // Constructor requerido
-        public Usuario(int id, string name, string lastName, string correo, string contrasena)
+        public Usuario(int id, string name, string lastName, string correo, int edad,string contrasena)
         {
             Id = id;
             Name = name;
             LastName = lastName;
             Correo = correo;
+            Edad = edad;
             Contrasena = contrasena;
         }
     }

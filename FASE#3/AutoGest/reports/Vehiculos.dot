@@ -2,4 +2,11 @@ digraph G {
 rankdir=LR;
 node [shape=record];
 splines=false;
+node0 [label="ID: 2 \n ID Usuario: 1 \n Marca: 1 \n Modelo: 1 \n Placa: 1"];
+node0 -> node1 [dir=forward];
+node0 -> node1 [dir=back];
+node1 [label="ID: 3 \n ID Usuario: 1 \n Marca: 1 \n Modelo: 1 \n Placa: 1"];
+node1 -> node2 [dir=forward];
+node1 -> node2 [dir=back];
+node2 [label="ID: 4 \n ID Usuario: 1 \n Marca: 1 \n Modelo: 1 \n Placa: 1"];
 }

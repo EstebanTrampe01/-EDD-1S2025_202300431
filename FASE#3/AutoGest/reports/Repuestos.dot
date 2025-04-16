@@ -1,4 +1,11 @@
 digraph AVL {
 node [shape=record];
 rankdir=TB;
+node2 [label="<f0> | <f1> ID: 2\nRepuesto: 2\nDetalles: 2\nCosto: 2\nFB: -1 | <f2>"];
+node1 [label="<f0> | <f1> ID: 1\nRepuesto: 1\nDetalles: 1\nCosto: 1\nFB: 0 | <f2>"];
+node3 [label="<f0> | <f1> ID: 3\nRepuesto: 3\nDetalles: 3\nCosto: 3\nFB: -1 | <f2>"];
+node4 [label="<f0> | <f1> ID: 4\nRepuesto: 4\nDetalles: 4\nCosto: 4\nFB: 0 | <f2>"];
+"node2":f0 -> "node1":f1;
+"node2":f2 -> "node3":f1;
+"node3":f2 -> "node4":f1;
 }

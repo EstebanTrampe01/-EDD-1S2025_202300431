@@ -21,7 +21,7 @@ namespace AutoGest.Interfaces
         private Frame frameRepuestos;
         private Frame frameServicios;
 
-        private Entry entryIdUsuario, entryNombres, entryApellidos, entryCorreo, entryContrasenia;
+        private Entry entryIdUsuario, entryNombres, entryApellidos, entryCorreo, entryEdad, entryContrasenia;
         private Entry entryIdVehiculo, entryIdUsuarioVehiculo, entryMarca, entryModelo, entryPlaca;
         private Entry entryIdRepuesto, entryRepuesto, entryDetalles, entryCosto;
         private Entry entryIdServicio, entryIdVehiculoServicio, entryIdRepuestoServicio, entryDetallesServicio, entryCostoServicio;
@@ -191,12 +191,15 @@ namespace AutoGest.Interfaces
             Label lblNombres = new Label("Nombres:") { Xalign = 0 };
             Label lblApellidos = new Label("Apellidos:") { Xalign = 0 };
             Label lblCorreo = new Label("Correo:") { Xalign = 0 };
+            Label lblEdad = new Label("Edad:") { Xalign = 0 };
             Label lblContrasenia = new Label("Contraseña:") { Xalign = 0 };
+
             
             entryIdUsuario = new Entry();
             entryNombres = new Entry();
             entryApellidos = new Entry();
             entryCorreo = new Entry();
+            entryEdad = new Entry();
             entryContrasenia = new Entry();
             entryContrasenia.Visibility = false;
             
@@ -209,8 +212,10 @@ namespace AutoGest.Interfaces
             table.Attach(entryApellidos, 1, 2, 2, 3);
             table.Attach(lblCorreo, 0, 1, 3, 4);
             table.Attach(entryCorreo, 1, 2, 3, 4);
-            table.Attach(lblContrasenia, 0, 1, 4, 5);
-            table.Attach(entryContrasenia, 1, 2, 4, 5);
+            table.Attach(lblEdad, 0, 1, 4, 5);
+            table.Attach(entryEdad, 1, 2, 4, 5);
+            table.Attach(lblContrasenia, 0, 1, 5, 6);
+            table.Attach(entryContrasenia, 1, 2, 5, 6);
             
             formBox.PackStart(table, true, true, 10);
             
@@ -457,6 +462,7 @@ namespace AutoGest.Interfaces
                     entryNombres.Text,
                     entryApellidos.Text,
                     entryCorreo.Text,
+                    int.Parse(entryEdad.Text),
                     entryContrasenia.Text
                 );            
                 listaUsuarios.Insertar(usuario);
@@ -743,6 +749,7 @@ namespace AutoGest.Interfaces
                                 LimpiarCampo(entryNombres);
                                 LimpiarCampo(entryApellidos);
                                 LimpiarCampo(entryCorreo);
+                                LimpiarCampo(entryEdad);
                                 LimpiarCampo(entryContrasenia);
                                 
                                 // Limpiar campos de vehículo

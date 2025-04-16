@@ -1,0 +1,30 @@
+graph ServiciosVehiculoRepuesto {
+    label="Grafo Servicios Vehículo-Repuesto JUAN ESTEBAN CHACON TRAMPE 202300431";
+    labelloc=top;
+    fontsize=20;
+    rankdir=LR;
+    subgraph cluster_vehiculos {
+        label="Vehículos";
+        color=white;
+        rank=same;
+        "V1";
+        "V2";
+        "V4";
+        "V3";
+    }
+    subgraph cluster_repuestos {
+        label="Repuestos";
+        color=white;
+        rank=same;
+        "R2";
+        "R3";
+        "R4";
+    }
+    "V1" -- "R2";
+    "V1" -- "R4";
+    "V2" -- "R2";
+    "V2" -- "R3";
+    "V2" -- "R4";
+    "V4" -- "R4";
+    "V3" -- "R4";
+}

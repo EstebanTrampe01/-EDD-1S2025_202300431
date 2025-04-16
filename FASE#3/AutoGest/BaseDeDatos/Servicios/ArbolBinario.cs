@@ -14,9 +14,6 @@ namespace Servicios
             raiz = null;
         }
 
-        /// <summary>
-        /// Inserta un servicio en el árbol binario de búsqueda.
-        /// </summary>
         public void Insertar(Servicio servicio)
         {
             raiz = InsertarRecursivo(raiz, servicio);
@@ -57,6 +54,10 @@ namespace Servicios
         public Servicio Buscar(int id)
         {
             return BuscarRecursivo(raiz, id);
+        }
+        public List<Servicio> ObtenerServicios()
+        {
+            return RecorridoInOrden();
         }
 
         private Servicio BuscarRecursivo(NodoBinario nodo, int id)

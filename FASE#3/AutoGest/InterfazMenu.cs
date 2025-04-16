@@ -12,6 +12,8 @@ namespace AutoGest.Interfaces
 {
     public class InterfazMenu : Box
     {
+
+        private GrafoServicios grafoServicios = new GrafoServicios();
         private InterfazMain mainWindow;
         private UserBlockchain listaUsuarios;
         private ArbolAVL arbolRepuestos;
@@ -136,14 +138,26 @@ namespace AutoGest.Interfaces
             Button button6 = CreateStyledButton("Generar Reportes");
             button6.Clicked += delegate { 
                 Console.WriteLine("Generando Reportes"); 
+
+                // Actualizar y generar grafo de servicios
+                var listaServicios = arbolServicios.ObtenerServicios(); // Debes implementar este método en ArbolBinario
+                grafoServicios.ActualizarDesdeServicios(listaServicios);
+                grafoServicios.GenerarReporteDOT(
+                    "grafo_servicios", 
+                    "JUAN ESTEBAN CHACON TRAMPE", 
+                    "202300431"
+                );
+
                 arbolServicios.GenerarGrafico("Servicios.dot");
                 arbolFacturas.GenerarGrafico("Facturacion.dot");
                 arbolRepuestos.GenerarGrafico("Repuestos.dot");
                 listaVehiculos.GenerarGrafico("Vehiculos.dot");
                 listaUsuarios.GenerarGrafico("Usuarios.dot");
+                
                 Console.WriteLine("Reportes generados");
             };
             buttonsGrid.Attach(button6, 0, 1, 3, 4);
+
             
             // Añadir el grid de botones al contenedor principal
             contentBox.PackStart(buttonsGrid, true, true, 0);
