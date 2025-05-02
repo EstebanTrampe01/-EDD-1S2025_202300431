@@ -13,7 +13,7 @@ class Program
     public static UserBlockchain listaUsuarios;
     public static ArbolAVL arbolRepuestos;
     public static ListaDoblementeEnlazada listaVehiculos;
-    public static ArbolB arbolFacturas;
+    public static ArbolM arbolFacturas;
     public static ArbolBinario arbolServicios;
 
     public static void Main(string[] args)
@@ -58,7 +58,7 @@ class Program
         listaUsuarios = new UserBlockchain();
         arbolRepuestos = new ArbolAVL();
         listaVehiculos = new ListaDoblementeEnlazada();
-        arbolFacturas = new ArbolB();
+        arbolFacturas = new ArbolM();
         arbolServicios = new ArbolBinario();
 
         InterfazMain interfazMain = new InterfazMain();

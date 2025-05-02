@@ -7,6 +7,8 @@ using Usuarios;
 using Vehiculos;
 using Repuestos;
 using AutoGest;
+using Facturas;
+using Servicios;
 
 namespace AutoGest.Interfaces
 {
@@ -16,6 +18,8 @@ namespace AutoGest.Interfaces
         private UserBlockchain listaUsuarios;
         private ListaDoblementeEnlazada listaVehiculos;
         private ArbolAVL arbolRepuestos;
+        private ArbolBinario arbolServicios;
+        private ArbolM arbolFacturas;
         private ComboBoxText comboBox;
         private Label statusLabel;
 
@@ -23,12 +27,16 @@ namespace AutoGest.Interfaces
             InterfazMain mainWindow,
             UserBlockchain listaUsuarios, 
             ListaDoblementeEnlazada listaVehiculos, 
-            ArbolAVL arbolRepuestos)
+            ArbolAVL arbolRepuestos,
+            ArbolBinario arbolServicios,
+            ArbolM arbolFacturas)
         {
             this.mainWindow = mainWindow;
             this.listaUsuarios = listaUsuarios;
             this.listaVehiculos = listaVehiculos;
             this.arbolRepuestos = arbolRepuestos;
+            this.arbolServicios = arbolServicios;
+            this.arbolFacturas = arbolFacturas;
 
             // Configurar espaciado y bordes
             BorderWidth = 20;
@@ -58,6 +66,7 @@ namespace AutoGest.Interfaces
             comboBox.AppendText("Usuarios");
             comboBox.AppendText("Vehículos");
             comboBox.AppendText("Repuestos");
+            comboBox.AppendText("Servicios");
             comboBox.Active = 0; // Seleccionar la primera opción por defecto
             
             // Contenedor para el combo box con mejor organización
@@ -203,9 +212,65 @@ namespace AutoGest.Interfaces
                             // Mostrar el árbol en consola para verificación
                             arbolRepuestos.Mostrar();
                         }
+                        else if (selectedOption == "Servicios")
+                        {
+                            foreach (JsonElement element in root.EnumerateArray())
+                            {
+                                int id = element.GetProperty("Id").GetInt32();
+                                int idRepuesto = element.GetProperty("Id_repuesto").GetInt32();
+                                int idVehiculo = element.GetProperty("Id_vehiculo").GetInt32();
+                                string detalles = element.GetProperty("Detalles").GetString();
+                                double costo = element.GetProperty("Costo").GetDouble();
+                                string metodoPago = "Efectivo"; // Valor por defecto
+                                
+                                // Intentar obtener método de pago si existe
+                                if (element.TryGetProperty("MetodoPago", out JsonElement metodoPagoElement))
+                                {
+                                    metodoPago = metodoPagoElement.GetString();
+                                }
+
+                                // Verificar si existen el vehículo y el repuesto
+                                Vehiculo* vehiculo = listaVehiculos.Buscar(idVehiculo);
+                                LRepuesto* repuesto = arbolRepuestos.Buscar(idRepuesto);
+                                
+                                if (vehiculo != null && repuesto != null)
+                                {
+                                    // Crear y guardar el servicio
+                                    Servicios.Servicio servicio = new Servicios.Servicio(id, idVehiculo, idRepuesto, detalles, costo, metodoPago);
+                                    arbolServicios.Insertar(servicio);
+                                    
+                                    // Crear y guardar la factura correspondiente
+                                    double total = costo + repuesto->Costo;
+                                    Facturas.Factura factura = new Facturas.Factura(id + 100, id, total);
+                                    factura.MetodoPago = metodoPago;
+                                    arbolFacturas.Insertar(factura);
+                                    
+                                    Console.WriteLine($"Servicio cargado: ID={id}, ID Vehículo={idVehiculo}, ID Repuesto={idRepuesto}, Costo={costo}, Método Pago={metodoPago}");
+                                    Console.WriteLine($"Factura generada: ID={factura.ID}, Total={total:F2}, Método Pago={factura.MetodoPago}");
+                                    
+                                    contadorElementos++;
+                                }
+                                else
+                                {
+                                    string error = "";
+                                    if (vehiculo == null) error += $"No existe un vehículo con ID {idVehiculo}. ";
+                                    if (repuesto == null) error += $"No existe un repuesto con ID {idRepuesto}. ";
+                                    
+                                    Console.WriteLine($"Error en servicio ID={id}: {error}");
+                                }
+                            }
+                            
+                            // Mostrar la lista en consola para verificación
+                            //arbolServicios.Print();
+                            //arbolFacturas.Print();
+                        }
                         
                         // Actualizar etiqueta de estado con información de éxito
-                        statusLabel.Markup = $"<span foreground='green'>Carga exitosa: {contadorElementos} {selectedOption.ToLower()} cargados.</span>";
+                        if (contadorElementos > 0) {
+                            statusLabel.Markup = $"<span foreground='green'>Carga exitosa: {contadorElementos} {selectedOption.ToLower()} cargados.</span>";
+                        } else {
+                            statusLabel.Markup = $"<span foreground='orange'>Advertencia: No se pudieron cargar {selectedOption.ToLower()}. Verifique los datos y dependencias.</span>";
+                        }
                     }
                     else
                     {

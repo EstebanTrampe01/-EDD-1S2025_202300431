@@ -25,7 +25,7 @@ namespace AutoGest
         private UserBlockchain listaUsuarios;
         private ArbolAVL arbolRepuestos;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private ArbolBinario arbolServicios;
 
         public InterfazMain() : base("AutoGest")

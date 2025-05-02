@@ -5,6 +5,7 @@ using Vehiculos;
 using Facturas;
 using Servicios;
 using AutoGest;
+using AutoGest.Utils;
 
 namespace AutoGest.Interfaces
 {
@@ -13,14 +14,15 @@ namespace AutoGest.Interfaces
         private InterfazMain mainWindow;
         private ArbolAVL arbolRepuestos;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private ArbolBinario arbolServicios;
+        private Label statusLabel;
 
         public InterfazGS(
             InterfazMain mainWindow,
             ArbolAVL arbolRepuestos, 
             ListaDoblementeEnlazada listaVehiculos, 
-            ArbolB arbolFacturas, 
+            ArbolM arbolFacturas, 
             ArbolBinario arbolServicios)
         {
             this.mainWindow = mainWindow;
@@ -43,13 +45,17 @@ namespace AutoGest.Interfaces
             labelTitulo.SetAlignment(0.5f, 0.5f);
             contentBox.PackStart(labelTitulo, false, false, 20);
             
+            // Añadir etiqueta de estado para mensajes
+            statusLabel = MessageManager.CreateStatusLabel();
+            contentBox.PackStart(statusLabel, false, false, 10);
+            
             // Separador después del título
             HSeparator separator = new HSeparator();
             contentBox.PackStart(separator, false, false, 10);
             
             // Frame para el formulario de servicio
             Frame frameServicio = new Frame("Datos del Servicio");
-            Table formTable = new Table(5, 2, false);
+            Table formTable = new Table(6, 2, false);
             formTable.RowSpacing = 10;
             formTable.ColumnSpacing = 15;
             formTable.BorderWidth = 15;
@@ -60,6 +66,7 @@ namespace AutoGest.Interfaces
             AddFormRow(formTable, 2, "ID del Vehículo:", out Entry entryIdVehiculo);
             AddFormRow(formTable, 3, "Detalles:", out Entry entryDetalles);
             AddFormRow(formTable, 4, "Costo del Servicio:", out Entry entryCosto);
+            AddFormRow(formTable, 5, "Método de Pago:", out Entry entryMetodoPago);
             
             frameServicio.Add(formTable);
             contentBox.PackStart(frameServicio, false, false, 10);
@@ -81,13 +88,13 @@ namespace AutoGest.Interfaces
             buttonVerificar.Clicked += delegate {
                 if (!int.TryParse(entryIdRepuesto.Text, out int idRepuesto))
                 {
-                    MostrarError(mainWindow, "ID de repuesto inválido. Debe ser un número entero.");
+                    MessageManager.ShowMessage(statusLabel, "ID de repuesto inválido. Debe ser un número entero.", MessageManager.MessageType.Error);
                     return;
                 }
                 
                 if (!int.TryParse(entryIdVehiculo.Text, out int idVehiculo))
                 {
-                    MostrarError(mainWindow, "ID de vehículo inválido. Debe ser un número entero.");
+                    MessageManager.ShowMessage(statusLabel, "ID de vehículo inválido. Debe ser un número entero.", MessageManager.MessageType.Error);
                     return;
                 }
                 
@@ -99,10 +106,12 @@ namespace AutoGest.Interfaces
                     string nombreRepuesto = GetFixedString(repuesto->Repuesto);
                     double costoRepuesto = repuesto->Costo;
                     labelInfoRepuesto.Markup = $"<span foreground='green'>Repuesto: {nombreRepuesto} - Costo: Q{costoRepuesto:F2}</span>";
+                    MessageManager.ShowMessage(statusLabel, $"Repuesto encontrado: {nombreRepuesto}", MessageManager.MessageType.Success, true);
                 }
                 else
                 {
                     labelInfoRepuesto.Markup = $"<span foreground='red'>Repuesto con ID {idRepuesto} no encontrado</span>";
+                    MessageManager.ShowMessage(statusLabel, $"Repuesto con ID {idRepuesto} no encontrado", MessageManager.MessageType.Warning);
                 }
                 
                 if (vehiculo != null)
@@ -111,10 +120,12 @@ namespace AutoGest.Interfaces
                     string placa = GetFixedString(vehiculo->Placa);
                     int idUsuario = vehiculo->ID_Usuario;
                     labelInfoVehiculo.Markup = $"<span foreground='green'>Vehículo: {marca} - Placa: {placa} - ID Usuario: {idUsuario}</span>";
+                    MessageManager.ShowMessage(statusLabel, $"Vehículo encontrado: {marca} - {placa}", MessageManager.MessageType.Success, true);
                 }
                 else
                 {
                     labelInfoVehiculo.Markup = $"<span foreground='red'>Vehículo con ID {idVehiculo} no encontrado</span>";
+                    MessageManager.ShowMessage(statusLabel, $"Vehículo con ID {idVehiculo} no encontrado", MessageManager.MessageType.Warning);
                 }
             };
             
@@ -154,25 +165,25 @@ namespace AutoGest.Interfaces
             buttonGuardar.Clicked += delegate {
                 if (!int.TryParse(entryID.Text, out int idServicio))
                 {
-                    MostrarError(mainWindow, "ID de servicio inválido. Debe ser un número entero.");
+                    MessageManager.ShowMessage(statusLabel, "ID de servicio inválido. Debe ser un número entero.", MessageManager.MessageType.Error);
                     return;
                 }
                 
                 if (!int.TryParse(entryIdRepuesto.Text, out int idRepuesto))
                 {
-                    MostrarError(mainWindow, "ID de repuesto inválido. Debe ser un número entero.");
+                    MessageManager.ShowMessage(statusLabel, "ID de repuesto inválido. Debe ser un número entero.", MessageManager.MessageType.Error);
                     return;
                 }
                 
                 if (!int.TryParse(entryIdVehiculo.Text, out int idVehiculo))
                 {
-                    MostrarError(mainWindow, "ID de vehículo inválido. Debe ser un número entero.");
+                    MessageManager.ShowMessage(statusLabel, "ID de vehículo inválido. Debe ser un número entero.", MessageManager.MessageType.Error);
                     return;
                 }
                 
                 if (!double.TryParse(entryCosto.Text, out double costoServicio))
                 {
-                    MostrarError(mainWindow, "Costo inválido. Debe ser un valor numérico.");
+                    MessageManager.ShowMessage(statusLabel, "Costo inválido. Debe ser un valor numérico.", MessageManager.MessageType.Error);
                     return;
                 }
 
@@ -187,35 +198,34 @@ namespace AutoGest.Interfaces
                         detalles = "Sin detalles";
                     }
 
+                    string metodoPago = entryMetodoPago.Text;
+                    if (string.IsNullOrWhiteSpace(metodoPago))
+                    {
+                        metodoPago = "Efectivo";
+                    }
+
                     try
                     {
                         // Crear y guardar el servicio
-                        Servicio servicio = new Servicio(idServicio, idVehiculo, idRepuesto, detalles, costoServicio);
+                        Servicio servicio = new Servicio(idServicio, idVehiculo, idRepuesto, detalles, costoServicio, metodoPago);
                         arbolServicios.Insertar(servicio);
                         
                         // Crear y guardar la factura
                         double total = costoServicio + repuesto->Costo;
                         Factura factura = new Factura(idServicio+100, idServicio, total);
+                        // Transferir el método de pago a la factura
+                        factura.MetodoPago = metodoPago;
                         arbolFacturas.Insertar(factura);
                         
                         Console.WriteLine("Servicio guardado:");
                         Console.WriteLine($"ID: {idServicio}, ID Repuesto: {idRepuesto}, ID Vehículo: {idVehiculo}");
-                        Console.WriteLine($"Detalles: {detalles}, Costo: {costoServicio}");
+                        Console.WriteLine($"Detalles: {detalles}, Costo: {costoServicio}, Método de Pago: {metodoPago}");
                         Console.WriteLine("Factura generada: " + factura.ToString());
                         
                         // Mostrar mensaje de éxito
-                        MessageDialog md = new MessageDialog(
-                            mainWindow, 
-                            DialogFlags.Modal, 
-                            MessageType.Info, 
-                            ButtonsType.Ok, 
-                            $"Servicio y factura generados exitosamente.\n\n" +
-                            $"ID Servicio: {idServicio}\n" +
-                            $"ID Factura: {factura.ID}\n" +
-                            $"Total: Q{total:F2}"
-                        );
-                        md.Run();
-                        md.Destroy();
+                        MessageManager.ShowMessage(statusLabel, 
+                            $"Servicio y factura generados exitosamente.\n ID Servicio: {idServicio}, ID Factura: {factura.ID}\n Total: Q{total:F2}", 
+                            MessageManager.MessageType.Success);
                         
                         // Limpiar campos para próximo ingreso
                         entryID.Text = string.Empty;
@@ -223,26 +233,25 @@ namespace AutoGest.Interfaces
                         entryIdVehiculo.Text = string.Empty;
                         entryDetalles.Text = string.Empty;
                         entryCosto.Text = string.Empty;
+                        entryMetodoPago.Text = string.Empty;
                         labelInfoRepuesto.Text = "Repuesto: [Seleccione un ID]";
                         labelInfoVehiculo.Text = "Vehículo: [Seleccione un ID]";
-                        
-                        // Generar visualización actualizada
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Error al guardar: {ex.Message}");
-                        MostrarError(mainWindow, $"Error al guardar el servicio: {ex.Message}");
+                        MessageManager.ShowMessage(statusLabel, $"Error al guardar el servicio: {ex.Message}", MessageManager.MessageType.Error);
                     }
                 }
                 else
                 {
                     if (repuesto == null)
                     {
-                        MostrarError(mainWindow, $"No se encontró un repuesto con ID {idRepuesto}.");
+                        MessageManager.ShowMessage(statusLabel, $"No se encontró un repuesto con ID {idRepuesto}.", MessageManager.MessageType.Error);
                     }
                     if (vehiculo == null)
                     {
-                        MostrarError(mainWindow, $"No se encontró un vehículo con ID {idVehiculo}.");
+                        MessageManager.ShowMessage(statusLabel, $"No se encontró un vehículo con ID {idVehiculo}.", MessageManager.MessageType.Error);
                     }
                 }
             };
@@ -293,18 +302,10 @@ namespace AutoGest.Interfaces
                 AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
         }
         
-        // Método para mostrar un error
+        // Reemplazamos el método MostrarError por MessageManager
         private void MostrarError(Window parent, string mensaje)
         {
-            MessageDialog md = new MessageDialog(
-                parent,
-                DialogFlags.Modal,
-                MessageType.Error,
-                ButtonsType.Ok,
-                mensaje
-            );
-            md.Run();
-            md.Destroy();
+            MessageManager.ShowMessage(statusLabel, mensaje, MessageManager.MessageType.Error);
         }
         
         // Método para convertir char* a string

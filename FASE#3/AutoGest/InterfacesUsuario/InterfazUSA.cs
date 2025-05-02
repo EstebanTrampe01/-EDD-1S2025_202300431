@@ -296,28 +296,29 @@ namespace AutoGest.InterfacesUsuario
             else
             {
                 // Encabezado de la tabla
-                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-35} | {3,-10}", 
-                              "ID", "Repuesto", "Detalles", "Costo (Q)"));
-                sb.AppendLine("------+----------+-------------------------------------+------------");
+                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-35} | {3,-10} | {4,-10}", 
+                              "ID", "Repuesto", "Detalles", "Costo (Q)", "Método Pago"));
+                sb.AppendLine("------+----------+-------------------------------------+------------+------------");
                 
                 double costoTotal = 0;
                 
                 // Filas de la tabla
                 foreach (var servicio in servicios)
                 {
-                    sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-35} | {3,10:F2}", 
+                    sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-35} | {3,10:F2} | {4,-10}", 
                                   servicio.ID, 
                                   servicio.Id_Repuesto, 
                                   servicio.Detalles.Length > 35 ? servicio.Detalles.Substring(0, 32) + "..." : servicio.Detalles, 
-                                  servicio.Costo));
+                                  servicio.Costo,
+                                  servicio.MetodoPago));
                     
                     costoTotal += servicio.Costo;
                 }
                 
                 // Pie de la tabla
-                sb.AppendLine("------+----------+-------------------------------------+------------");
-                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-35} | {3,10:F2}", 
-                              "", "", "TOTAL:", costoTotal));
+                sb.AppendLine("------+----------+-------------------------------------+------------+------------");
+                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-35} | {3,10:F2} | {4,-10}", 
+                              "", "", "TOTAL:", costoTotal, ""));
             }
             
             textViewServicios.Buffer.Text = sb.ToString();
@@ -341,9 +342,9 @@ namespace AutoGest.InterfacesUsuario
             else
             {
                 // Encabezado de la tabla
-                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-35} | {4,-10}", 
-                              "ID", "Repuesto", "Vehículo", "Detalles", "Costo (Q)"));
-                sb.AppendLine("------+----------+--------------+-------------------------------------+------------");
+                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-35} | {4,-10} | {5,-10}", 
+                              "ID", "Repuesto", "Vehículo", "Detalles", "Costo (Q)", "Método Pago"));
+                sb.AppendLine("------+----------+--------------+-------------------------------------+------------+------------");
                 
                 double costoTotal = 0;
                 
@@ -355,20 +356,21 @@ namespace AutoGest.InterfacesUsuario
                     if (infoVehiculo.Length > 12)
                         infoVehiculo = infoVehiculo.Substring(0, 9) + "...";
                     
-                    sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-35} | {4,10:F2}", 
+                    sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-35} | {4,10:F2} | {5,-10}", 
                                   servicio.ID, 
                                   servicio.Id_Repuesto,
                                   infoVehiculo, 
                                   servicio.Detalles.Length > 35 ? servicio.Detalles.Substring(0, 32) + "..." : servicio.Detalles, 
-                                  servicio.Costo));
+                                  servicio.Costo,
+                                  servicio.MetodoPago));
                     
                     costoTotal += servicio.Costo;
                 }
                 
                 // Pie de la tabla
-                sb.AppendLine("------+----------+--------------+-------------------------------------+------------");
-                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-35} | {4,10:F2}", 
-                              "", "", "", "TOTAL:", costoTotal));
+                sb.AppendLine("------+----------+--------------+-------------------------------------+------------+------------");
+                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-35} | {4,10:F2} | {5,-10}", 
+                              "", "", "", "TOTAL:", costoTotal, ""));
                 
                 // Resumen
                 sb.AppendLine("\nRESUMEN:");

@@ -1,6 +1,7 @@
 using Gtk;
 using System;
 using Vehiculos;
+using AutoGest.Utils;
 
 namespace AutoGest.InterfacesUsuario
 {
@@ -10,6 +11,7 @@ namespace AutoGest.InterfacesUsuario
         private ListaDoblementeEnlazada listaVehiculos;
         
         private Entry entryIdVehiculo, entryMarca, entryModelo, entryPlaca;
+        private Label statusLabel;
 
         public InterfazURV(int idUsuario, ListaDoblementeEnlazada listaVehiculos) : base("Registrar Vehículo")
         {
@@ -32,119 +34,119 @@ namespace AutoGest.InterfacesUsuario
             HBox hboxIdUsuario = new HBox(false, 5);
             Label labelIdUsuario = new Label("ID Usuario:");
             Label labelIdUsuarioValor = new Label(idUsuario.ToString());
-            labelIdUsuarioValor.ModifyFont(Pango.FontDescription.FromString("Sans Bold 10"));
-            hboxIdUsuario.PackStart(labelIdUsuario, false, false, 10);
-            hboxIdUsuario.PackStart(labelIdUsuarioValor, true, true, 10);
-            vbox.PackStart(hboxIdUsuario, false, false, 10);
+            labelIdUsuarioValor.ModifyFg(StateType.Normal, new Gdk.Color(0, 0, 200));
+            hboxIdUsuario.PackStart(labelIdUsuario, false, false, 0);
+            hboxIdUsuario.PackStart(labelIdUsuarioValor, false, false, 5);
+            vbox.PackStart(hboxIdUsuario, false, false, 5);
 
-            // Crear los campos de formulario
-            // ID del vehículo
-            HBox hboxIdVehiculo = new HBox(false, 5);
+            // Formulario para ingresar datos del vehículo
+            Table formTable = new Table(4, 2, false);
+            formTable.RowSpacing = 10;
+            formTable.ColumnSpacing = 10;
+
+            // ID Vehículo
             Label labelIdVehiculo = new Label("ID Vehículo:");
+            labelIdVehiculo.SetAlignment(0, 0.5f);
             entryIdVehiculo = new Entry();
-            hboxIdVehiculo.PackStart(labelIdVehiculo, false, false, 10);
-            hboxIdVehiculo.PackStart(entryIdVehiculo, true, true, 10);
-            vbox.PackStart(hboxIdVehiculo, false, false, 10);
+            formTable.Attach(labelIdVehiculo, 0, 1, 0, 1);
+            formTable.Attach(entryIdVehiculo, 1, 2, 0, 1);
 
             // Marca
-            HBox hboxMarca = new HBox(false, 5);
             Label labelMarca = new Label("Marca:");
+            labelMarca.SetAlignment(0, 0.5f);
             entryMarca = new Entry();
-            hboxMarca.PackStart(labelMarca, false, false, 10);
-            hboxMarca.PackStart(entryMarca, true, true, 10);
-            vbox.PackStart(hboxMarca, false, false, 10);
+            formTable.Attach(labelMarca, 0, 1, 1, 2);
+            formTable.Attach(entryMarca, 1, 2, 1, 2);
 
             // Modelo
-            HBox hboxModelo = new HBox(false, 5);
-            Label labelModelo = new Label("Modelo:");
+            Label labelModelo = new Label("Modelo (año):");
+            labelModelo.SetAlignment(0, 0.5f);
             entryModelo = new Entry();
-            hboxModelo.PackStart(labelModelo, false, false, 10);
-            hboxModelo.PackStart(entryModelo, true, true, 10);
-            vbox.PackStart(hboxModelo, false, false, 10);
+            formTable.Attach(labelModelo, 0, 1, 2, 3);
+            formTable.Attach(entryModelo, 1, 2, 2, 3);
 
             // Placa
-            HBox hboxPlaca = new HBox(false, 5);
             Label labelPlaca = new Label("Placa:");
+            labelPlaca.SetAlignment(0, 0.5f);
             entryPlaca = new Entry();
-            hboxPlaca.PackStart(labelPlaca, false, false, 10);
-            hboxPlaca.PackStart(entryPlaca, true, true, 10);
-            vbox.PackStart(hboxPlaca, false, false, 10);
+            formTable.Attach(labelPlaca, 0, 1, 3, 4);
+            formTable.Attach(entryPlaca, 1, 2, 3, 4);
 
-            // Botón de registro
+            vbox.PackStart(formTable, false, false, 10);
+
+            // Etiqueta para mensajes de estado
+            statusLabel = MessageManager.CreateStatusLabel();
+            vbox.PackStart(statusLabel, false, false, 10);
+
+            // Botones
+            HBox hboxBotones = new HBox(true, 10);
             Button buttonRegistrar = new Button("Registrar Vehículo");
-            buttonRegistrar.Clicked += RegistrarVehiculo;
-            vbox.PackStart(buttonRegistrar, false, false, 10);
+            Button buttonCancelar = new Button("Cancelar");
+
+            buttonRegistrar.Clicked += OnRegistrarClicked;
+            buttonCancelar.Clicked += (sender, e) => Destroy();
+
+            hboxBotones.PackStart(buttonRegistrar, true, true, 0);
+            hboxBotones.PackStart(buttonCancelar, true, true, 0);
+            vbox.PackStart(hboxBotones, false, false, 10);
 
             Add(vbox);
             ShowAll();
         }
 
-        private void RegistrarVehiculo(object sender, EventArgs e)
+        private void OnRegistrarClicked(object sender, EventArgs e)
         {
-            // Validaciones básicas
-            if (string.IsNullOrWhiteSpace(entryIdVehiculo.Text) ||
-                string.IsNullOrWhiteSpace(entryMarca.Text) ||
-                string.IsNullOrWhiteSpace(entryModelo.Text) ||
-                string.IsNullOrWhiteSpace(entryPlaca.Text))
+            try
             {
-                MostrarError("Todos los campos son obligatorios.");
-                return;
-            }
+                // Validar que todos los campos estén completos
+                if (string.IsNullOrWhiteSpace(entryIdVehiculo.Text) || 
+                    string.IsNullOrWhiteSpace(entryMarca.Text) ||
+                    string.IsNullOrWhiteSpace(entryModelo.Text) ||
+                    string.IsNullOrWhiteSpace(entryPlaca.Text))
+                {
+                    MessageManager.ShowMessage(statusLabel, "Todos los campos son obligatorios", MessageManager.MessageType.Warning);
+                    return;
+                }
 
-            // Convertir y validar ID del vehículo
-            if (!int.TryParse(entryIdVehiculo.Text, out int idVehiculo))
+                // Convertir ID y modelo a enteros
+                if (!int.TryParse(entryIdVehiculo.Text, out int idVehiculo))
+                {
+                    MessageManager.ShowMessage(statusLabel, "El ID del vehículo debe ser un número entero", MessageManager.MessageType.Error);
+                    return;
+                }
+
+                if (!int.TryParse(entryModelo.Text, out int modelo))
+                {
+                    MessageManager.ShowMessage(statusLabel, "El modelo debe ser un año válido (número entero)", MessageManager.MessageType.Error);
+                    return;
+                }
+
+                // Verificar si ya existe un vehículo con este ID
+                if (listaVehiculos.Buscar(idVehiculo) != null)
+                {
+                    MessageManager.ShowMessage(statusLabel, $"Ya existe un vehículo con ID {idVehiculo}", MessageManager.MessageType.Error);
+                    return;
+                }
+
+                // Insertar el vehículo
+                listaVehiculos.Insertar(idVehiculo, idUsuario, entryMarca.Text, modelo, entryPlaca.Text);
+
+                // Mostrar mensaje de éxito
+                MessageManager.ShowMessage(statusLabel, "Vehículo registrado exitosamente", MessageManager.MessageType.Success);
+
+                // Limpiar los campos después de registrar
+                entryIdVehiculo.Text = "";
+                entryMarca.Text = "";
+                entryModelo.Text = "";
+                entryPlaca.Text = "";
+
+                Console.WriteLine($"Vehículo registrado: ID={idVehiculo}, Marca={entryMarca.Text}, Modelo={modelo}, Placa={entryPlaca.Text}");
+            }
+            catch (Exception ex)
             {
-                MostrarError("El ID del vehículo debe ser un número entero.");
-                return;
+                MessageManager.ShowMessage(statusLabel, $"Error al registrar vehículo: {ex.Message}", MessageManager.MessageType.Error);
+                Console.WriteLine($"Error al registrar vehículo: {ex.Message}");
             }
-
-            // Convertir y validar modelo
-            if (!int.TryParse(entryModelo.Text, out int modelo))
-            {
-                MostrarError("El modelo debe ser un número entero que represente el año.");
-                return;
-            }
-
-            // Verificar si ya existe un vehículo con ese ID
-            if (listaVehiculos.Buscar(idVehiculo) != null)
-            {
-                MostrarError("Ya existe un vehículo con ese ID. Por favor, utilice otro ID.");
-                return;
-            }
-
-            // Registrar el vehículo en la lista
-            listaVehiculos.Insertar(idVehiculo, idUsuario, entryMarca.Text, modelo, entryPlaca.Text);
-            
-            // Mostrar mensaje de éxito
-            MessageDialog md = new MessageDialog(this, 
-                DialogFlags.DestroyWithParent, 
-                MessageType.Info, 
-                ButtonsType.Ok, 
-                "Vehículo registrado correctamente");
-            md.Run();
-            md.Destroy();
-
-            // Limpiar los campos para permitir registrar otro vehículo
-            LimpiarCampos();
-        }
-
-        private void LimpiarCampos()
-        {
-            entryIdVehiculo.Text = "";
-            entryMarca.Text = "";
-            entryModelo.Text = "";
-            entryPlaca.Text = "";
-        }
-
-        private void MostrarError(string mensaje)
-        {
-            MessageDialog md = new MessageDialog(this, 
-                DialogFlags.DestroyWithParent, 
-                MessageType.Error, 
-                ButtonsType.Close, 
-                mensaje);
-            md.Run();
-            md.Destroy();
         }
     }
 }

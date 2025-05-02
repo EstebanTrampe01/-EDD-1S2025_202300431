@@ -6,6 +6,7 @@ using Vehiculos;
 using Servicios;
 using System.Text;
 using System.Linq;
+using AutoGest.Utils;
 
 namespace AutoGest.InterfacesUsuario
 {
@@ -13,7 +14,7 @@ namespace AutoGest.InterfacesUsuario
     {
         private int idUsuario;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private ArbolBinario arbolServicios;
         
         private Entry entryIdFactura;
@@ -21,8 +22,9 @@ namespace AutoGest.InterfacesUsuario
         private Button buttonBuscar;
         private Button buttonPagar;
         private List<Factura> facturasUsuario;
+        private Label statusLabel;
 
-        public InterfazUCF(int idUsuario, ListaDoblementeEnlazada listaVehiculos, ArbolB arbolFacturas, ArbolBinario arbolServicios) 
+        public InterfazUCF(int idUsuario, ListaDoblementeEnlazada listaVehiculos, ArbolM arbolFacturas, ArbolBinario arbolServicios) 
             : base("Cancelación de Facturas")
         {
             this.idUsuario = idUsuario;
@@ -98,6 +100,10 @@ namespace AutoGest.InterfacesUsuario
             buttonPagar.Clicked += OnPagarFacturaClicked;
             mainVBox.PackStart(buttonPagar, false, false, 10);
 
+            // Etiqueta para mensajes de estado
+            statusLabel = MessageManager.CreateStatusLabel();
+            mainVBox.PackStart(statusLabel, false, false, 10);
+
             Add(mainVBox);
             ShowAll();
         }
@@ -151,12 +157,12 @@ namespace AutoGest.InterfacesUsuario
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("ID Factura | ID Servicio | Total");
-            sb.AppendLine("-------------------------------");
+            sb.AppendLine("ID Factura | ID Servicio | Total | Método Pago");
+            sb.AppendLine("---------------------------------------");
             
             foreach (var factura in facturasUsuario)
             {
-                sb.AppendLine($"{factura.ID,-9} | {factura.ID_Orden,-11} | Q{factura.Total:F2}");
+                sb.AppendLine($"{factura.ID,-9} | {factura.ID_Orden,-11} | Q{factura.Total:F2} | {factura.MetodoPago}");
             }
 
             return sb.ToString();
@@ -178,13 +184,13 @@ namespace AutoGest.InterfacesUsuario
             
             if (string.IsNullOrEmpty(idFacturaStr))
             {
-                MostrarMensaje("Por favor, ingrese el ID de la factura.", MessageType.Warning);
+                MessageManager.ShowMessage(statusLabel, "Por favor, ingrese el ID de la factura.", MessageManager.MessageType.Warning);
                 return;
             }
 
             if (!int.TryParse(idFacturaStr, out int idFactura))
             {
-                MostrarMensaje("El ID de la factura debe ser un número entero.", MessageType.Error);
+                MessageManager.ShowMessage(statusLabel, "El ID de la factura debe ser un número entero.", MessageManager.MessageType.Error);
                 return;
             }
 
@@ -193,7 +199,7 @@ namespace AutoGest.InterfacesUsuario
 
             if (facturaSeleccionada == null)
             {
-                MostrarMensaje($"No se encontró ninguna factura con ID {idFactura} asociada a sus servicios.", MessageType.Warning);
+                MessageManager.ShowMessage(statusLabel, $"No se encontró ninguna factura con ID {idFactura} asociada a sus servicios.", MessageManager.MessageType.Warning);
                 textViewDetalleFactura.Buffer.Text = "Factura no encontrada.";
                 buttonPagar.Sensitive = false;
                 return;
@@ -226,6 +232,7 @@ namespace AutoGest.InterfacesUsuario
             sb.AppendLine($"ID Factura: {facturaSeleccionada.ID}");
             sb.AppendLine($"ID Servicio: {facturaSeleccionada.ID_Orden}");
             sb.AppendLine($"Total a pagar: Q{facturaSeleccionada.Total:F2}");
+            sb.AppendLine($"Método de pago: {facturaSeleccionada.MetodoPago}");
             
             if (servicio != null)
             {
@@ -233,6 +240,7 @@ namespace AutoGest.InterfacesUsuario
                 sb.AppendLine($"Descripción: {servicio.Detalles}");
                 sb.AppendLine($"ID: {servicio.ID}");
                 sb.AppendLine($"Costo: Q{servicio.Costo:F2}");
+                sb.AppendLine($"Método de pago: {servicio.MetodoPago}");
             }
 
             if (vehiculo != null)
@@ -246,6 +254,8 @@ namespace AutoGest.InterfacesUsuario
             textViewDetalleFactura.Buffer.Text = sb.ToString();
             buttonPagar.Sensitive = true;
             buttonPagar.Label = $"Pagar Factura #{facturaSeleccionada.ID} (Q{facturaSeleccionada.Total:F2})";
+            
+            MessageManager.ShowMessage(statusLabel, $"Factura #{idFactura} encontrada correctamente", MessageManager.MessageType.Success, true);
         }
 
         private void OnPagarFacturaClicked(object sender, EventArgs e)
@@ -254,77 +264,53 @@ namespace AutoGest.InterfacesUsuario
             
             if (string.IsNullOrEmpty(idFacturaStr) || !int.TryParse(idFacturaStr, out int idFactura))
             {
-                MostrarMensaje("ID de factura inválido.", MessageType.Error);
+                MessageManager.ShowMessage(statusLabel, "ID de factura inválido.", MessageManager.MessageType.Error);
                 return;
             }
 
             // Confirmar pago
-            MessageDialog confirmDialog = new MessageDialog(
-                this,
-                DialogFlags.Modal,
-                MessageType.Question,
-                ButtonsType.YesNo,
-                $"¿Está seguro que desea pagar la factura #{idFactura}?"
-            );
-
-            ResponseType response = (ResponseType)confirmDialog.Run();
-            confirmDialog.Destroy();
-
-            if (response != ResponseType.Yes)
-            {
-                return;
-            }
-
-            try
-            {
-                // Eliminar la factura del árbol
-                arbolFacturas.Eliminar(idFactura);
-
-                    MostrarMensaje($"¡Factura #{idFactura} pagada correctamente!", MessageType.Info);
-                    
-                    // Actualizar la lista de facturas disponibles
-                    facturasUsuario = ObtenerFacturasDelUsuario();
-                    string infoFacturas = ObtenerInfoFacturasDisponibles();
-                    
-                    // Limpiar campos
-                    entryIdFactura.Text = "";
-                    textViewDetalleFactura.Buffer.Text = "Factura pagada correctamente. Seleccione otra factura para ver detalles.";
-                    buttonPagar.Sensitive = false;
-                    buttonPagar.Label = "Pagar Factura";
-
-                    // Actualizar lista de facturas disponibles
-                    Frame frameParent = (Frame)((VBox)((Frame)((VBox)buttonBuscar.Parent.Parent).Parent).Parent).Parent;
-                    VBox vboxFacturas = (VBox)((Frame)frameParent.Child).Child;
-                    
-                    // Limpiar y actualizar el widget de facturas disponibles
-                    foreach (Widget w in vboxFacturas.Children)
+            MessageManager.AskConfirmation(
+                (Box)this.Child, // Asumiendo que es una Box
+                $"¿Está seguro que desea pagar la factura #{idFactura}?",
+                () => {
+                    try
                     {
-                        vboxFacturas.Remove(w);
+                        // Eliminar la factura del árbol
+                        arbolFacturas.Eliminar(idFactura);
+                        
+                        MessageManager.ShowMessage(statusLabel, $"¡Factura #{idFactura} pagada correctamente!", MessageManager.MessageType.Success);
+                        
+                        // Actualizar la lista de facturas disponibles
+                        facturasUsuario = ObtenerFacturasDelUsuario();
+                        string infoFacturas = ObtenerInfoFacturasDisponibles();
+                        
+                        // Limpiar campos
+                        entryIdFactura.Text = "";
+                        textViewDetalleFactura.Buffer.Text = "Factura pagada correctamente. Seleccione otra factura para ver detalles.";
+                        buttonPagar.Sensitive = false;
+                        buttonPagar.Label = "Pagar Factura";
+                        
+                        // Actualizar lista de facturas disponibles
+                        Frame frameParent = (Frame)((VBox)((Frame)((VBox)buttonBuscar.Parent.Parent).Parent).Parent).Parent;
+                        VBox vboxFacturas = (VBox)((Frame)frameParent.Child).Child;
+                        
+                        // Limpiar y actualizar el widget de facturas disponibles
+                        foreach (Widget w in vboxFacturas.Children)
+                        {
+                            vboxFacturas.Remove(w);
+                        }
+                        
+                        Label labelFacturas = new Label(infoFacturas);
+                        vboxFacturas.PackStart(labelFacturas, false, false, 0);
+                        vboxFacturas.ShowAll();
                     }
-
-                    Label labelFacturas = new Label(infoFacturas);
-                    vboxFacturas.PackStart(labelFacturas, false, false, 0);
-                    vboxFacturas.ShowAll();
-
-            }
-            catch (Exception ex)
-            {
-                MostrarMensaje($"Error: {ex.Message}", MessageType.Error);
-                Console.WriteLine($"Error al pagar factura: {ex.Message}\n{ex.StackTrace}");
-            }
-        }
-
-        private void MostrarMensaje(string mensaje, MessageType tipo)
-        {
-            MessageDialog messageDialog = new MessageDialog(
-                this,
-                DialogFlags.Modal,
-                tipo,
-                ButtonsType.Ok,
-                mensaje
+                    catch (Exception ex)
+                    {
+                        MessageManager.ShowMessage(statusLabel, $"Error: {ex.Message}", MessageManager.MessageType.Error);
+                        Console.WriteLine($"Error al pagar factura: {ex.Message}\n{ex.StackTrace}");
+                    }
+                }
             );
-            messageDialog.Run();
-            messageDialog.Destroy();
         }
     }
 }

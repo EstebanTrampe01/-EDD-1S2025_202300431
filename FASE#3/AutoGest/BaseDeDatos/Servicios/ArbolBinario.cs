@@ -378,7 +378,7 @@ namespace Servicios
             if (nodo != null)
             {
                 Servicio servicio = nodo.Data;
-                writer.WriteLine($"node{servicio.ID} [label=\"ID: {servicio.ID}\\nRepuesto: {servicio.Id_Repuesto}\\nVehículo: {servicio.Id_Vehiculo}\\nCosto: ${servicio.Costo:F2}\"];");
+                writer.WriteLine($"node{servicio.ID} [label=\"ID: {servicio.ID}\\nRepuesto: {servicio.Id_Repuesto}\\nVehículo: {servicio.Id_Vehiculo}\\nCosto: ${servicio.Costo:F2}\\nPago: {servicio.MetodoPago}\"];");
                 
                 GenerarNodosGrafico(writer, nodo.Izquierda);
                 GenerarNodosGrafico(writer, nodo.Derecha);

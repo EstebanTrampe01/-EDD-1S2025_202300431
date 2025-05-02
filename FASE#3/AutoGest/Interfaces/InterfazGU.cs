@@ -3,6 +3,7 @@ using System;
 using Usuarios;
 using Vehiculos;
 using AutoGest;
+using AutoGest.Utils;
 
 namespace AutoGest.Interfaces
 {
@@ -11,6 +12,7 @@ namespace AutoGest.Interfaces
         private InterfazMain mainWindow;
         private UserBlockchain listaUsuarios;
         private ListaDoblementeEnlazada listaVehiculos;
+        private Label statusLabel;
 
         public InterfazGU(
             InterfazMain mainWindow,
@@ -34,6 +36,10 @@ namespace AutoGest.Interfaces
             labelTitulo.Markup = "<span font='16' weight='bold'>GESTIÓN DE USUARIOS</span>";
             labelTitulo.SetAlignment(0.5f, 0.5f);
             contentBox.PackStart(labelTitulo, false, false, 20);
+            
+            // Añadir etiqueta de estado para mensajes
+            statusLabel = MessageManager.CreateStatusLabel();
+            contentBox.PackStart(statusLabel, false, false, 10);
             
             // Separador después del título
             HSeparator separator = new HSeparator();
@@ -67,6 +73,7 @@ namespace AutoGest.Interfaces
             
             buttonVerUsuarios.Clicked += delegate {
                 textViewUsuarios.Buffer.Text = listaUsuarios.ObtenerLista();
+                MessageManager.ShowMessage(statusLabel, "Lista de usuarios cargada correctamente", MessageManager.MessageType.Info, true);
             };
             
             // Centrar el botón
@@ -151,7 +158,7 @@ namespace AutoGest.Interfaces
                 int id;
                 if (int.TryParse(entryIdEditar.Text, out id))
                 {
-                                        Usuario usuario = listaUsuarios.Buscar(id);
+                    Usuario usuario = listaUsuarios.Buscar(id);
                     if (usuario != null)
                     {
                         labelNombresActual.Text = $"Nombres: {usuario.Name}";
@@ -172,17 +179,17 @@ namespace AutoGest.Interfaces
                         entryEdadEditar.Sensitive = true;
                         entryContraseniaEditar.Sensitive = true;
                         buttonEditarUsuario.Sensitive = true;
+                        
+                        MessageManager.ShowMessage(statusLabel, "Usuario encontrado correctamente", MessageManager.MessageType.Success, true);
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Usuario no encontrado", MessageType.Warning);
-                        Console.WriteLine("Usuario no encontrado.");
+                        MessageManager.ShowMessage(statusLabel, "Usuario no encontrado", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "ID inválido. Ingrese un número.", MessageType.Error);
-                    Console.WriteLine("ID inválido.");
+                    MessageManager.ShowMessage(statusLabel, "ID inválido. Ingrese un número.", MessageManager.MessageType.Error);
                 }
             };
 
@@ -190,30 +197,37 @@ namespace AutoGest.Interfaces
                 int id;
                 if (int.TryParse(entryIdEditar.Text, out id))
                 {
-                    listaUsuarios.ModificarUsuario(id, entryNombresEditar.Text, entryApellidosEditar.Text, entryCorreoEditar.Text, int.Parse(entryEdadEditar.Text), entryContraseniaEditar.Text);
+                    try
+                    {
+                        listaUsuarios.ModificarUsuario(id, entryNombresEditar.Text, entryApellidosEditar.Text, entryCorreoEditar.Text, int.Parse(entryEdadEditar.Text), entryContraseniaEditar.Text);
 
-                    // Limpiar los inputs después de actualizar
-                    entryIdEditar.Text = "";
-                    entryNombresEditar.Text = "";
-                    entryApellidosEditar.Text = "";
-                    entryCorreoEditar.Text = "";
-                    entryEdadEditar.Text = "";
-                    entryContraseniaEditar.Text = "";
+                        // Limpiar los inputs después de actualizar
+                        entryIdEditar.Text = "";
+                        entryNombresEditar.Text = "";
+                        entryApellidosEditar.Text = "";
+                        entryCorreoEditar.Text = "";
+                        entryEdadEditar.Text = "";
+                        entryContraseniaEditar.Text = "";
 
-                    labelNombresActual.Text = "Nombres: ";
-                    labelApellidosActual.Text = "Apellidos: ";
-                    labelCorreoActual.Text = "Correo: ";
-                    labelEdadActual.Text = "Edad: ";
-                    labelContraseniaActual.Text = "Contraseña: ";
+                        labelNombresActual.Text = "Nombres: ";
+                        labelApellidosActual.Text = "Apellidos: ";
+                        labelCorreoActual.Text = "Correo: ";
+                        labelEdadActual.Text = "Edad: ";
+                        labelContraseniaActual.Text = "Contraseña: ";
 
-                    entryNombresEditar.Sensitive = false;
-                    entryApellidosEditar.Sensitive = false;
-                    entryCorreoEditar.Sensitive = false;
-                    entryEdadEditar.Sensitive = false;
-                    entryContraseniaEditar.Sensitive = false;
-                    buttonEditarUsuario.Sensitive = false;
-                    
-                    MostrarMensaje(mainWindow, "Usuario actualizado exitosamente", MessageType.Info);
+                        entryNombresEditar.Sensitive = false;
+                        entryApellidosEditar.Sensitive = false;
+                        entryCorreoEditar.Sensitive = false;
+                        entryEdadEditar.Sensitive = false;
+                        entryContraseniaEditar.Sensitive = false;
+                        buttonEditarUsuario.Sensitive = false;
+                        
+                        MessageManager.ShowMessage(statusLabel, "Usuario actualizado exitosamente", MessageManager.MessageType.Success);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageManager.ShowMessage(statusLabel, $"Error al actualizar usuario: {ex.Message}", MessageManager.MessageType.Error);
+                    }
                 }
             };
 
@@ -253,32 +267,29 @@ namespace AutoGest.Interfaces
                     Usuario usuario = listaUsuarios.Buscar(id);
                     if (usuario != null)
                     {
-                        using (var dialog = new MessageDialog(mainWindow,
-                            DialogFlags.Modal,
-                            MessageType.Question,
-                            ButtonsType.YesNo,
-                            $"¿Está seguro que desea eliminar al usuario {usuario.Name} {usuario.LastName} (ID: {id})?"))
-                        {
-                            if (dialog.Run() == (int)ResponseType.Yes)
-                            {
-                               
+                        MessageManager.AskConfirmation(
+                            contentBox,
+                            $"¿Está seguro que desea eliminar al usuario {usuario.Name} {usuario.LastName} (ID: {id})?",
+                            () => {
+                                try {
                                     listaUsuarios.Eliminar(id);
                                     entryIdEliminar.Text = "";
-                                    MostrarMensaje(mainWindow, "Usuario eliminado exitosamente", MessageType.Info);
-                                
+                                    MessageManager.ShowMessage(statusLabel, "Usuario eliminado exitosamente", MessageManager.MessageType.Success);
+                                }
+                                catch (Exception ex) {
+                                    MessageManager.ShowMessage(statusLabel, $"Error al eliminar: {ex.Message}", MessageManager.MessageType.Error);
+                                }
                             }
-                            dialog.Destroy();
-                        }
+                        );
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Usuario no encontrado", MessageType.Warning);
+                        MessageManager.ShowMessage(statusLabel, "Usuario no encontrado", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "ID inválido. Ingrese un número.", MessageType.Error);
-                    Console.WriteLine("ID inválido.");
+                    MessageManager.ShowMessage(statusLabel, "ID inválido. Ingrese un número.", MessageManager.MessageType.Error);
                 }
             };
             
@@ -325,19 +336,6 @@ namespace AutoGest.Interfaces
             centeringBox.PackStart(new Label(""), true, true, 0);
             
             PackStart(centeringBox, true, true, 0);
-        }
-
-        private void MostrarMensaje(Window parent, string mensaje, MessageType tipo)
-        {
-            using (var md = new MessageDialog(parent, 
-                DialogFlags.DestroyWithParent, 
-                tipo, 
-                ButtonsType.Close, 
-                mensaje))
-            {
-                md.Run();
-                md.Destroy();
-            }
         }
 
         private unsafe string GetFixedString(char* fixedStr)

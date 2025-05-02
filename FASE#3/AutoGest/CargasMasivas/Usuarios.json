@@ -1,0 +1,98 @@
+[
+  {
+    "ID": 1,
+    "Nombres": "Carlos Alberto",
+    "Apellidos": "Gomez Martinez",
+    "Correo": "carlos.alberto@usac.com",
+    "Edad": 20,
+    "Contrasenia": "CarlosMartinez"
+  },
+  {
+    "ID": 2,
+    "Nombres": "Ana Lucia",
+    "Apellidos": "Martinez Lopez",
+    "Correo": "ana.lucia@usac.com",
+    "Edad": 20,
+    "Contrasenia": "AnaLopez"
+  },
+  {
+    "ID": 3,
+    "Nombres": "Luis Enrique",
+    "Apellidos": "Perez Ramirez",
+    "Edad": 20,
+    "Correo": "luis.enrique@usac.com",
+    "Contrasenia": "LuisRamirez"
+  },
+  {
+    "ID": 4,
+    "Nombres": "Marta Isabel",
+    "Apellidos": "Lopez Perez",
+    "Edad": 20,
+    "Correo": "marta.isabel@usac.com",
+    "Contrasenia": "MartaPerez"
+  },
+  {
+    "ID": 5,
+    "Nombres": "Juan Carlos",
+    "Apellidos": "Hernandez Lopez",
+    "Edad": 20,
+    "Correo": "juan.carlos@usac.com",
+    "Contrasenia": "JuanLopez"
+  },
+  {
+    "ID": 6,
+    "Nombres": "Maria Fernanda",
+    "Apellidos": "Garcia Lopez",
+    "Edad": 20,
+    "Correo": "maria.fernanda@usac.com",
+    "Contrasenia": "MariaLopez"
+  },
+  {
+    "ID": 7,
+    "Nombres": "Pedro Pablo",
+    "Apellidos": "Rodriguez Torres",
+    "Edad": 20,
+    "Correo": "pedro.pablo@usac.com",
+    "Contrasenia": "PedroTorres"
+  },
+  {
+    "ID": 8,
+    "Nombres": "Laura Isabel",
+    "Apellidos": "Sanchez Morales",
+    "Edad": 20,
+    "Correo": "laura.isabel@usac.com",
+    "Contrasenia": "LauraMorales"
+  },
+  {
+    "ID": 9,
+    "Nombres": "Rafael Alejandro",
+    "Apellidos": "Ramirez Diaz",
+    "Edad": 20,
+    "Correo": "rafael.alejandro@usac.com",
+    "Contrasenia": "RafaelDiaz"
+  },
+  {
+    "ID": 10,
+    "Nombres": "Isabel Cristina",
+    "Apellidos": "Diaz Lopez",
+    "Edad": 20,
+    "Correo": "isabel.cristina@usac.com",
+    "Contrasenia": "IsabelLopez"
+  },
+   {
+    "ID": 1,
+    "Nombres": "Carlos Juan",
+    "Apellidos": "Garcia Martinez",
+    "Edad": 20,
+    "Correo": "carlos.alberto@usac.com",
+    "Contrasenia": "CarlosMartinez"
+  },
+  {
+    "ID": 11,
+    "Nombres": "Carlos Juan",
+    "Apellidos": "Garcia Martinez",
+    "Edad": 20,
+    "Correo": "carlos.alberto@usac.com",
+    "Contrasenia": "CarlosMartinez"
+  }
+]

@@ -2,6 +2,7 @@ using Gtk;
 using System;
 using Vehiculos;
 using AutoGest;
+using AutoGest.Utils;
 
 namespace AutoGest.Interfaces
 {
@@ -9,6 +10,7 @@ namespace AutoGest.Interfaces
     {
         private InterfazMain mainWindow;
         private ListaDoblementeEnlazada listaVehiculos;
+        private Label statusLabel;
 
         public InterfazGV(InterfazMain mainWindow, ListaDoblementeEnlazada listaVehiculos)
         {
@@ -28,6 +30,10 @@ namespace AutoGest.Interfaces
             labelTitulo.Markup = "<span font='16' weight='bold'>GESTIÓN DE VEHÍCULOS</span>";
             labelTitulo.SetAlignment(0.5f, 0.5f);
             contentBox.PackStart(labelTitulo, false, false, 20);
+            
+            // Añadir etiqueta de estado para mensajes
+            statusLabel = MessageManager.CreateStatusLabel();
+            contentBox.PackStart(statusLabel, false, false, 10);
             
             // Separador después del título
             HSeparator separator = new HSeparator();
@@ -61,6 +67,7 @@ namespace AutoGest.Interfaces
             
             buttonVerVehiculos.Clicked += delegate {
                 textViewVehiculos.Buffer.Text = listaVehiculos.ObtenerLista();
+                MessageManager.ShowMessage(statusLabel, "Lista de vehículos cargada correctamente", MessageManager.MessageType.Info, true);
             };
             
             // Centrar el botón
@@ -158,17 +165,17 @@ namespace AutoGest.Interfaces
                         entryModeloEditar.Sensitive = true;
                         entryPlacaEditar.Sensitive = true;
                         buttonEditarVehiculo.Sensitive = true;
+                        
+                        MessageManager.ShowMessage(statusLabel, "Vehículo encontrado correctamente", MessageManager.MessageType.Success, true);
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Vehículo no encontrado", MessageType.Warning);
-                        Console.WriteLine("Vehículo no encontrado.");
+                        MessageManager.ShowMessage(statusLabel, "Vehículo no encontrado", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "ID inválido. Ingrese un número.", MessageType.Error);
-                    Console.WriteLine("ID inválido.");
+                    MessageManager.ShowMessage(statusLabel, "ID inválido. Ingrese un número.", MessageManager.MessageType.Error);
                 }
             };
 
@@ -199,12 +206,11 @@ namespace AutoGest.Interfaces
                         entryPlacaEditar.Sensitive = false;
                         buttonEditarVehiculo.Sensitive = false;
                         
-                        MostrarMensaje(mainWindow, "Vehículo actualizado exitosamente", MessageType.Info);
+                        MessageManager.ShowMessage(statusLabel, "Vehículo actualizado exitosamente", MessageManager.MessageType.Success);
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "ID Usuario o Modelo inválido. Ingrese un número.", MessageType.Error);
-                        Console.WriteLine("ID Usuario o Modelo inválido.");
+                        MessageManager.ShowMessage(statusLabel, "ID Usuario o Modelo inválido. Ingrese un número.", MessageManager.MessageType.Error);
                     }
                 }
             };
@@ -245,30 +251,27 @@ namespace AutoGest.Interfaces
                     Vehiculo* vehiculo = listaVehiculos.Buscar(id);
                     if (vehiculo != null)
                     {
-                        using (var dialog = new MessageDialog(mainWindow,
-                            DialogFlags.Modal,
-                            MessageType.Question,
-                            ButtonsType.YesNo,
-                            $"¿Está seguro que desea eliminar el vehículo {GetFixedString(vehiculo->Marca)} con placa {GetFixedString(vehiculo->Placa)} (ID: {id})?"))
-                        {
-                            if (dialog.Run() == (int)ResponseType.Yes)
-                            {
+                        string marca = GetFixedString(vehiculo->Marca);
+                        string placa = GetFixedString(vehiculo->Placa);
+                        
+                        MessageManager.AskConfirmation(
+                            contentBox,
+                            $"¿Está seguro que desea eliminar el vehículo {marca} con placa {placa} (ID: {id})?",
+                            () => {
                                 listaVehiculos.Eliminar(id);
                                 entryIdEliminar.Text = "";
-                                MostrarMensaje(mainWindow, "Vehículo eliminado exitosamente", MessageType.Info);
+                                MessageManager.ShowMessage(statusLabel, "Vehículo eliminado exitosamente", MessageManager.MessageType.Success);
                             }
-                            dialog.Destroy();
-                        }
+                        );
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Vehículo no encontrado", MessageType.Warning);
+                        MessageManager.ShowMessage(statusLabel, "Vehículo no encontrado", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "ID inválido. Ingrese un número.", MessageType.Error);
-                    Console.WriteLine("ID inválido.");
+                    MessageManager.ShowMessage(statusLabel, "ID inválido. Ingrese un número.", MessageManager.MessageType.Error);
                 }
             };
             
@@ -315,19 +318,6 @@ namespace AutoGest.Interfaces
             centeringBox.PackStart(new Label(""), true, true, 0);
             
             PackStart(centeringBox, true, true, 0);
-        }
-
-        private void MostrarMensaje(Window parent, string mensaje, MessageType tipo)
-        {
-            using (var md = new MessageDialog(parent, 
-                DialogFlags.DestroyWithParent, 
-                tipo, 
-                ButtonsType.Close, 
-                mensaje))
-            {
-                md.Run();
-                md.Destroy();
-            }
         }
 
         private unsafe string GetFixedString(char* fixedStr)

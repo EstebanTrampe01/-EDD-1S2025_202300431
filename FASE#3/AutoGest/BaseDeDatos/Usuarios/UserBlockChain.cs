@@ -143,5 +143,37 @@ namespace Usuarios
         {
             blockchain.GenerarGrafico(fileName);
         }
+
+        public List<Block> GetAllBlocks()
+        {
+            return blockchain.Chain;
+        }
+
+        public void LoadFromBackup(List<Block> blocks)
+        {
+            blockchain.Chain.Clear();
+            blockchain.Chain.AddRange(blocks);
+            idToBlockIndex.Clear();
+            for (int i = 0; i < blockchain.Chain.Count; i++)
+            {
+                var usuario = blockchain.Chain[i].Data;
+                if (usuario != null)
+                {
+                    idToBlockIndex[usuario.Id] = i;
+                }
+            }
+        }
+
+        // Método para cargar la blockchain desde un backup
+        public void CargarDesdeBackup(List<Block> blocks)
+        {
+            if (blocks == null || blocks.Count == 0)
+                return;
+
+            // Usar el método LoadFromBackup que ya existe
+            LoadFromBackup(blocks);
+            
+            Console.WriteLine($"Blockchain cargada desde backup: {blockchain.Chain.Count} bloques");
+        }
     }
 }

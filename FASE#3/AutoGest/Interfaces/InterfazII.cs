@@ -24,13 +24,13 @@ namespace AutoGest.Interfaces
         private Entry entryIdUsuario, entryNombres, entryApellidos, entryCorreo, entryEdad, entryContrasenia;
         private Entry entryIdVehiculo, entryIdUsuarioVehiculo, entryMarca, entryModelo, entryPlaca;
         private Entry entryIdRepuesto, entryRepuesto, entryDetalles, entryCosto;
-        private Entry entryIdServicio, entryIdVehiculoServicio, entryIdRepuestoServicio, entryDetallesServicio, entryCostoServicio;
+        private Entry entryIdServicio, entryIdVehiculoServicio, entryIdRepuestoServicio, entryDetallesServicio, entryCostoServicio, entryMetodoPagoServicio;
 
         private UserBlockchain listaUsuarios;
         private ListaDoblementeEnlazada listaVehiculos;
         private ArbolAVL arbolRepuestos;
         private ArbolBinario arbolServicios;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
 
         public InterfazII(
             InterfazMain mainWindow,
@@ -38,7 +38,7 @@ namespace AutoGest.Interfaces
             ListaDoblementeEnlazada listaVehiculos, 
             ArbolAVL arbolRepuestos,
             ArbolBinario arbolServicios,
-            ArbolB arbolFacturas)
+            ArbolM arbolFacturas)
         {
             this.mainWindow = mainWindow;
             this.listaUsuarios = listaUsuarios;
@@ -318,7 +318,7 @@ namespace AutoGest.Interfaces
             VBox formBox = new VBox(false, 10);
             formBox.BorderWidth = 10;
             
-            Table table = new Table(5, 2, false);
+            Table table = new Table(6, 2, false);
             table.RowSpacing = 10;
             table.ColumnSpacing = 15;
             
@@ -328,12 +328,14 @@ namespace AutoGest.Interfaces
             Label lblIdRepuesto = new Label("ID Repuesto:") { Xalign = 0 };
             Label lblDetalles = new Label("Detalles:") { Xalign = 0 };
             Label lblCosto = new Label("Costo (Q):") { Xalign = 0 };
+            Label lblMetodoPago = new Label("Método de Pago:") { Xalign = 0 };
             
             entryIdServicio = new Entry();
             entryIdVehiculoServicio = new Entry();
             entryIdRepuestoServicio = new Entry();
             entryDetallesServicio = new Entry();
             entryCostoServicio = new Entry();
+            entryMetodoPagoServicio = new Entry();
             
             // Botones para verificar
             Button btnVerificarVehiculo = new Button("Verificar");
@@ -367,6 +369,8 @@ namespace AutoGest.Interfaces
             table.Attach(entryDetallesServicio, 1, 2, 3, 4);
             table.Attach(lblCosto, 0, 1, 4, 5);
             table.Attach(entryCostoServicio, 1, 2, 4, 5);
+            table.Attach(lblMetodoPago, 0, 1, 5, 6);
+            table.Attach(entryMetodoPagoServicio, 1, 2, 5, 6);
             
             formBox.PackStart(table, true, true, 10);
             
@@ -655,21 +659,29 @@ namespace AutoGest.Interfaces
                                 detalles = "Sin detalles";
                             }
                             
+                            // Preparar método de pago
+                            string metodoPago = entryMetodoPagoServicio.Text;
+                            if (string.IsNullOrWhiteSpace(metodoPago))
+                            {
+                                metodoPago = "Efectivo";
+                            }
+                            
                             try
                             {
                                 // Guardar servicio
-                                Servicios.Servicio servicio = new Servicios.Servicio(idServicio, idVehiculo, idRepuesto, detalles, costo);
+                                Servicios.Servicio servicio = new Servicios.Servicio(idServicio, idVehiculo, idRepuesto, detalles, costo, metodoPago);
                                 arbolServicios.Insertar(servicio);
                                 
                                 // Crear y guardar la factura
                                 LRepuesto* repuesto = arbolRepuestos.Buscar(idRepuesto);
                                 double total = costo + repuesto->Costo;
                                 Facturas.Factura factura = new Facturas.Factura(idServicio + 100, idServicio, total);
+                                factura.MetodoPago = metodoPago; // Transferir método de pago
                                 arbolFacturas.Insertar(factura);
                                 
-                                MostrarMensaje(mainWindow, $"Servicio y factura generados exitosamente.\nID Servicio: {idServicio}\nID Factura: {factura.ID}\nTotal: Q{total:F2}", MessageType.Info);
-                                Console.WriteLine($"Servicio guardado: ID={idServicio}, ID Vehículo={idVehiculo}, ID Repuesto={idRepuesto}");
-                                Console.WriteLine($"Factura generada: ID={factura.ID}, Total={total:F2}");
+                                MostrarMensaje(mainWindow, $"Servicio y factura generados exitosamente.\nID Servicio: {idServicio}\nID Factura: {factura.ID}\nMétodo de Pago: {metodoPago}\nTotal: Q{total:F2}", MessageType.Info);
+                                Console.WriteLine($"Servicio guardado: ID={idServicio}, ID Vehículo={idVehiculo}, ID Repuesto={idRepuesto}, Método de Pago={metodoPago}");
+                                Console.WriteLine($"Factura generada: ID={factura.ID}, Total={total:F2}, Método de Pago={factura.MetodoPago}");
                                 
                                 LimpiarCamposFormulario();
                             }
@@ -771,6 +783,7 @@ namespace AutoGest.Interfaces
                                 LimpiarCampo(entryIdRepuestoServicio);
                                 LimpiarCampo(entryDetallesServicio);
                                 LimpiarCampo(entryCostoServicio);
+                                LimpiarCampo(entryMetodoPagoServicio);
                             });
                         }
                         
@@ -814,4 +827,3 @@ namespace AutoGest.Interfaces
                         }
                     }
                 }
-            

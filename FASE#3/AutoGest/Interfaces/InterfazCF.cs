@@ -4,17 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Facturas;
 using AutoGest;
+using AutoGest.Utils;
 
 namespace AutoGest.Interfaces
 {
     public unsafe class InterfazCF : Box
     {
         private InterfazMain mainWindow;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private VBox facturaBox;
         private Frame frameFactura;
+        private Label statusLabel;
 
-        public InterfazCF(InterfazMain mainWindow, ArbolB arbolFacturas)
+        public InterfazCF(InterfazMain mainWindow, ArbolM arbolFacturas)
         {
             this.mainWindow = mainWindow;
             this.arbolFacturas = arbolFacturas;
@@ -32,6 +34,10 @@ namespace AutoGest.Interfaces
             labelTitulo.Markup = "<span font='16' weight='bold'>CANCELACIÓN DE FACTURA</span>";
             labelTitulo.SetAlignment(0.5f, 0.5f);
             contentBox.PackStart(labelTitulo, false, false, 20);
+            
+            // Añadir etiqueta de estado para mensajes
+            statusLabel = MessageManager.CreateStatusLabel();
+            contentBox.PackStart(statusLabel, false, false, 10);
             
             // Separador después del título
             HSeparator separator = new HSeparator();
@@ -177,35 +183,17 @@ namespace AutoGest.Interfaces
         {
             try
             {
-                // Primero preguntar al usuario si está seguro
-                using (var confirmDialog = new MessageDialog(
-                    mainWindow,
-                    DialogFlags.DestroyWithParent,
-                    MessageType.Question,
-                    ButtonsType.YesNo,
-                    $"¿Está seguro que desea cancelar la factura #{idFactura}?"))
-                {
-                    ResponseType response = (ResponseType)confirmDialog.Run();
-                    confirmDialog.Destroy();
-                    
-                    if (response == ResponseType.Yes)
-                    {
+                MessageManager.AskConfirmation(
+                    this, // Este es el contenedor (Box) donde se mostrará la confirmación
+                    $"¿Está seguro que desea cancelar la factura #{idFactura}?",
+                    () => {
                         // Intentar eliminar la factura
                         bool eliminacionExitosa = arbolFacturas.Eliminar(idFactura);
                         
                         if (eliminacionExitosa)
                         {
                             // Mostrar mensaje de éxito
-                            using (var md = new MessageDialog(
-                                mainWindow,
-                                DialogFlags.DestroyWithParent,
-                                MessageType.Info,
-                                ButtonsType.Ok,
-                                $"La factura #{idFactura} ha sido cancelada exitosamente."))
-                            {
-                                md.Run();
-                                md.Destroy();
-                            }
+                            MessageManager.ShowMessage(statusLabel, $"La factura #{idFactura} ha sido cancelada exitosamente.", MessageManager.MessageType.Success);
                             
                             // Actualizar la información de la factura en la misma interfaz
                             ActualizarInfoFactura();
@@ -213,38 +201,19 @@ namespace AutoGest.Interfaces
                         else
                         {
                             // Mostrar mensaje de error
-                            using (var md = new MessageDialog(
-                                mainWindow,
-                                DialogFlags.DestroyWithParent,
-                                MessageType.Error,
-                                ButtonsType.Ok,
-                                $"Error: No se pudo cancelar la factura #{idFactura}."))
-                            {
-                                md.Run();
-                                md.Destroy();
-                            }
+                            MessageManager.ShowMessage(statusLabel, $"Error: No se pudo cancelar la factura #{idFactura}.", MessageManager.MessageType.Error);
                         }
                     }
-                }
+                );
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al cancelar factura: {ex.Message}");
-                
-                using (var md = new MessageDialog(
-                    mainWindow,
-                    DialogFlags.DestroyWithParent,
-                    MessageType.Error,
-                    ButtonsType.Ok,
-                    $"Error al cancelar factura: {ex.Message}"))
-                {
-                    md.Run();
-                    md.Destroy();
-                }
+                MessageManager.ShowMessage(statusLabel, $"Error al cancelar factura: {ex.Message}", MessageManager.MessageType.Error);
             }
         }
 
-        private Factura ObtenerUltimaFactura(ArbolB arbolFacturas)
+        private Factura ObtenerUltimaFactura(ArbolM arbolFacturas)
         {
             try
             {

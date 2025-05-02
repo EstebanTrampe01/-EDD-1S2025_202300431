@@ -639,5 +639,45 @@ namespace Repuestos
             }
         }
 
+        // Ajustar el método ToList para trabajar con LRepuesto
+        public List<LRepuesto> ToList()
+        {
+            List<LRepuesto> lista = new List<LRepuesto>();
+            RecorrerEnOrden(root, lista);
+            return lista;
+        }
+
+        private void RecorrerEnOrden(NodoAVL* nodo, List<LRepuesto> lista)
+        {
+            if (nodo == null) return;
+            RecorrerEnOrden(nodo->Left, lista);
+            lista.Add(nodo->Repuesto);
+            RecorrerEnOrden(nodo->Right, lista);
+        }
+
+        // Método para cargar los repuestos desde un backup
+        public void CargarDesdeBackup(List<LRepuesto> repuestos)
+        {
+            if (repuestos == null || repuestos.Count == 0)
+                return;
+
+            // Limpiar el árbol actual
+            LiberarMemoriaRecursivo(root);
+            root = null;
+
+            // Cargar los repuestos desde el backup
+            foreach (var repuesto in repuestos)
+            {
+                // Usar el método Insertar con los campos de LRepuesto
+                Insertar(
+                    repuesto.Id,
+                    GetFixedString(repuesto.Repuesto),
+                    GetFixedString(repuesto.Detalles),
+                    repuesto.Costo
+                );
+            }
+            
+            Console.WriteLine($"Árbol de repuestos cargado desde backup: {repuestos.Count} elementos");
+        }
     }
 }

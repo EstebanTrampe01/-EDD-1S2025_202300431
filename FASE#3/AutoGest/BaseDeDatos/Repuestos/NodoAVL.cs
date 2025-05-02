@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Repuestos;
 
 namespace Repuestos
 {
@@ -9,5 +10,6 @@ namespace Repuestos
         public NodoAVL* Left;       // Hijo izquierdo
         public NodoAVL* Right;      // Hijo derecho
         public int Height;          // Altura del nodo para balanceo
+
     }
 }

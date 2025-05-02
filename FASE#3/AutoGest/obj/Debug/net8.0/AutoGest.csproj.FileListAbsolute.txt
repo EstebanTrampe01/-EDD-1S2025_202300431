@@ -70,3 +70,4 @@
 /home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/obj/Debug/net8.0/AutoGest.pdb
 /home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/obj/Debug/net8.0/AutoGest.genruntimeconfig.cache
 /home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/obj/Debug/net8.0/ref/AutoGest.dll
+/home/dant/Escritorio/EDD/Practica-1/-EDD-1S2025_202300431/FASE#3/AutoGest/bin/Debug/net8.0/Newtonsoft.Json.dll

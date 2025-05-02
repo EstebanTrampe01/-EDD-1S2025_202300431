@@ -55,5 +55,17 @@ namespace Repuestos
                 return $"ID: {Id}, Repuesto: {getFixedString(r)}, Detalles: {getFixedString(d)}, Costo: {Costo}";
             }
         }
+
+        // Eliminar el método ToSerializableRepuesto ya que no es necesario
+        // public Repuesto ToSerializableRepuesto() { ... }
+
+        // Asegurarse de que los métodos existentes trabajen directamente con LRepuesto
+        public string GetRepuestoAsString()
+        {
+            fixed (char* r = Repuesto, d = Detalles)
+            {
+                return $"ID: {Id}, Repuesto: {getFixedString(r)}, Detalles: {getFixedString(d)}, Costo: {Costo}";
+            }
+        }
     }
 }

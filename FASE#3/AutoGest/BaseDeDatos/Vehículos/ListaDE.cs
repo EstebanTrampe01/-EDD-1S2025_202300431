@@ -304,5 +304,44 @@ namespace Vehiculos
                 NativeMemory.Free(temp);
             }
         }
+
+        public List<Vehiculo> ToList()
+        {
+            List<Vehiculo> lista = new List<Vehiculo>();
+            Nodo<Vehiculo>* actual = head;
+            while (actual != null)
+            {
+                Vehiculo v = actual->Data;
+                Vehiculo serializableVehiculo = new Vehiculo(
+                    v.Id,
+                    v.ID_Usuario,
+                    GetFixedString(v.Marca),
+                    v.Modelo,
+                    GetFixedString(v.Placa)
+                );
+                lista.Add(serializableVehiculo);
+                actual = actual->Next;
+            }
+            return lista;
+        }
+
+        // Método para cargar la lista de vehículos desde un backup
+        public void CargarDesdeBackup(List<Vehiculo> vehiculos)
+        {
+            if (vehiculos == null || vehiculos.Count == 0)
+                return;
+
+            // Limpiar la lista actual
+            head = null;
+            tail = null;
+
+            // Cargar los vehículos desde el backup
+            foreach (var vehiculo in vehiculos)
+            {
+                Insertar(vehiculo.Id, vehiculo.ID_Usuario, GetFixedString(vehiculo.Marca), vehiculo.Modelo, GetFixedString(vehiculo.Placa));
+            }
+            
+            Console.WriteLine($"Lista de vehículos cargada desde backup.");
+        }
     }
 }

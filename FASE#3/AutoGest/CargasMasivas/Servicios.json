@@ -1,0 +1,115 @@
+[
+    {
+        "Id": 1,
+        "Id_repuesto": 2,
+        "Id_vehiculo": 2,
+        "Detalles": "Calificacion servicio 1",
+        "Costo": 75,
+        "MetodoPago": "Efectivo"
+      },
+      {
+        "Id": 9,
+        "Id_repuesto": 5,
+        "Id_vehiculo": 12,
+        "Detalles": "Calificacion servicio 2",
+        "Costo": 100,
+        "MetodoPago": "Tarjeta"
+      },
+      {
+        "Id": 3,
+        "Id_repuesto": 4,
+        "Id_vehiculo": 4,
+        "Detalles": "Calificacion servicio 3",
+        "Costo": 50,
+        "MetodoPago": "Efectivo"
+      },
+      {
+        "Id": 4,
+        "Id_repuesto": 5,
+        "Id_vehiculo": 5,
+        "Detalles": "Calificacion servicio 4",
+        "Costo": 200,
+        "MetodoPago": "Transferencia"
+      },
+      {
+        "Id": 5,
+        "Id_repuesto": 6,
+        "Id_vehiculo": 6,
+        "Detalles": "Calificacion servicio 5",
+        "Costo": 150,
+        "MetodoPago": "Efectivo"
+      },
+      {
+        "Id": 6,
+        "Id_repuesto": 7,
+        "Id_vehiculo": 7,
+        "Detalles": "Calificacion servicio 6",
+        "Costo": 80,
+        "MetodoPago": "Tarjeta"
+      },
+      {
+        "Id": 7,
+        "Id_repuesto": 4,
+        "Id_vehiculo": 8,
+        "Detalles": "Calificacion servicio 7",
+        "Costo": 120,
+        "MetodoPago": "Efectivo"
+      },
+      {
+        "Id": 8,
+        "Id_repuesto": 2,
+        "Id_vehiculo": 9,
+        "Detalles": "Calificacion servicio 8",
+        "Costo": 90,
+        "MetodoPago": "Transferencia"
+      },
+      {
+        "Id": 10,
+        "Id_repuesto": 3,
+        "Id_vehiculo": 10,
+        "Detalles": "Calificacion servicio 9",
+        "Costo": 110,
+        "MetodoPago": "Efectivo"
+      },
+      {
+        "Id": 11,
+        "Id_repuesto": 3,
+        "Id_vehiculo": 11,
+        "Detalles": "Calificacion servicio 10",
+        "Costo": 60,
+        "MetodoPago": "Tarjeta"
+      },
+      {
+        "Id": 12,
+        "Id_repuesto": 4,
+        "Id_vehiculo": 12,
+        "Detalles": "Calificacion servicio 11",
+        "Costo": 130,
+        "MetodoPago": "Transferencia"
+      },
+      {
+        "Id": 13,
+        "Id_repuesto": 2,
+        "Id_vehiculo": 13,
+        "Detalles": "Calificacion servicio 12",
+        "Costo": 140,
+        "MetodoPago": "Efectivo"
+      },
+      {
+        "Id": 14,
+        "Id_repuesto": 10,
+        "Id_vehiculo": 14,
+        "Detalles": "Calificacion servicio 13",
+        "Costo": 160,
+        "MetodoPago": "Tarjeta"
+      },
+      {
+        "Id": 15,
+        "Id_repuesto": 1,
+        "Id_vehiculo": 15,
+        "Detalles": "Calificacion servicio 14",
+        "Costo": 170,
+        "MetodoPago": "Transferencia"
+      }
+      
+    ]

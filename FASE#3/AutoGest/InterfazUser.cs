@@ -17,7 +17,7 @@ namespace AutoGest.Interfaces
         private int idUsuario;
         private UserBlockchain listaUsuarios;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private ArbolBinario arbolServicios;
         private string correoUsuarioActual;
 
@@ -26,7 +26,7 @@ namespace AutoGest.Interfaces
             int idUsuario,
             UserBlockchain listaUsuarios,
             ListaDoblementeEnlazada listaVehiculos,
-            ArbolB arbolFacturas,
+            ArbolM arbolFacturas,
             ArbolBinario arbolServicios)
         {
             this.mainWindow = mainWindow;

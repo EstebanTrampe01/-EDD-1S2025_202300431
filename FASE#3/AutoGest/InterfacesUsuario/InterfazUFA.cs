@@ -13,7 +13,7 @@ namespace AutoGest.InterfacesUsuario
     {
         private int idUsuario;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private ArbolBinario arbolServicios;
         private TextView textViewFacturas;
         private ComboBox comboServicios;
@@ -23,7 +23,7 @@ namespace AutoGest.InterfacesUsuario
         private RadioButton radioPreOrder;
         private RadioButton radioPostOrder;
 
-        public InterfazUFA(int idUsuario, ListaDoblementeEnlazada listaVehiculos, ArbolB arbolFacturas, ArbolBinario arbolServicios) 
+        public InterfazUFA(int idUsuario, ListaDoblementeEnlazada listaVehiculos, ArbolM arbolFacturas, ArbolBinario arbolServicios) 
             : base("Facturas Activas")
         {
             this.idUsuario = idUsuario;
@@ -343,6 +343,7 @@ namespace AutoGest.InterfacesUsuario
             sb.AppendLine($"ID Factura: {factura.ID}");
             sb.AppendLine($"Detalles del servicio: {detallesServicio}");
             sb.AppendLine($"Total a pagar: Q{factura.Total:F2}");
+            sb.AppendLine($"Método de pago: {factura.MetodoPago}");
             
             textViewFacturas.Buffer.Text = sb.ToString();
         }
@@ -363,9 +364,9 @@ namespace AutoGest.InterfacesUsuario
             else
             {
                 // Encabezado de la tabla
-                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-25} | {4,-10}", 
-                              "ID", "Servicio", "Vehículo", "Detalles", "Total (Q)"));
-                sb.AppendLine("------+----------+--------------+---------------------------+------------");
+                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-25} | {4,-10} | {5,-10}", 
+                              "ID", "Servicio", "Vehículo", "Detalles", "Total (Q)", "Método Pago"));
+                sb.AppendLine("------+----------+--------------+---------------------------+------------+------------");
                 
                 double montoTotal = 0;
                 
@@ -381,20 +382,21 @@ namespace AutoGest.InterfacesUsuario
                     if (detalles.Length > 25)
                         detalles = detalles.Substring(0, 22) + "...";
                     
-                    sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-25} | {4,10:F2}", 
+                    sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-25} | {4,10:F2} | {5,-10}", 
                                   factura.ID, 
                                   item.ServicioId,
                                   infoVehiculo, 
                                   detalles,
-                                  factura.Total));
+                                  factura.Total,
+                                  factura.MetodoPago));
                     
                     montoTotal += factura.Total;
                 }
                 
                 // Pie de la tabla
-                sb.AppendLine("------+----------+--------------+---------------------------+------------");
-                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-25} | {4,10:F2}", 
-                              "", "", "", "TOTAL:", montoTotal));
+                sb.AppendLine("------+----------+--------------+---------------------------+------------+------------");
+                sb.AppendLine(string.Format("{0,-5} | {1,-8} | {2,-12} | {3,-25} | {4,10:F2} | {5,-10}", 
+                              "", "", "", "TOTAL:", montoTotal, ""));
                 
                 // Resumen
                 sb.AppendLine("\nRESUMEN:");

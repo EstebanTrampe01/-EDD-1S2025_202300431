@@ -18,7 +18,7 @@ namespace AutoGest.Interfaces
         private UserBlockchain listaUsuarios;
         private ArbolAVL arbolRepuestos;
         private ListaDoblementeEnlazada listaVehiculos;
-        private ArbolB arbolFacturas;
+        private ArbolM arbolFacturas;
         private ArbolBinario arbolServicios;
 
         public InterfazMenu(
@@ -26,7 +26,7 @@ namespace AutoGest.Interfaces
             UserBlockchain listaUsuarios,
             ArbolAVL arbolRepuestos,
             ListaDoblementeEnlazada listaVehiculos,
-            ArbolB arbolFacturas,
+            ArbolM arbolFacturas,
             ArbolBinario arbolServicios)
         {
             this.mainWindow = mainWindow;
@@ -71,7 +71,9 @@ namespace AutoGest.Interfaces
                     mainWindow,
                     listaUsuarios, 
                     listaVehiculos, 
-                    arbolRepuestos);
+                    arbolRepuestos,
+                    arbolServicios,
+                    arbolFacturas);
                 mainWindow.CambiarPanel(interfazCM);
             };
             buttonsGrid.Attach(button1, 0, 1, 0, 1);
@@ -157,6 +159,24 @@ namespace AutoGest.Interfaces
                 Console.WriteLine("Reportes generados");
             };
             buttonsGrid.Attach(button6, 0, 1, 3, 4);
+
+            // Botón: Generar Backups
+            Button buttonGenBackup = CreateStyledButton("Generar Backups");
+            buttonGenBackup.Clicked += delegate {
+                Console.WriteLine("Opción: Generar Backups seleccionada");
+                InterfazGenB interfazGenB = new InterfazGenB(mainWindow, listaUsuarios, arbolRepuestos, listaVehiculos, arbolFacturas, arbolServicios);
+                mainWindow.CambiarPanel(interfazGenB);
+            };
+            buttonsGrid.Attach(buttonGenBackup, 1, 2, 3, 4);
+
+            // Botón: Cargar Backups
+            Button buttonCarBackup = CreateStyledButton("Cargar Backups");
+            buttonCarBackup.Clicked += delegate {
+                Console.WriteLine("Opción: Cargar Backups seleccionada");
+                InterfazCarB interfazCarB = new InterfazCarB(mainWindow, listaUsuarios, arbolRepuestos, listaVehiculos, arbolFacturas, arbolServicios);
+                mainWindow.CambiarPanel(interfazCarB);
+            };
+            buttonsGrid.Attach(buttonCarBackup, 0, 1, 4, 5);
 
             
             // Añadir el grid de botones al contenedor principal

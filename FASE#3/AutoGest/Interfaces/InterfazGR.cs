@@ -2,6 +2,7 @@ using Gtk;
 using System;
 using Repuestos;
 using AutoGest;
+using AutoGest.Utils;
 
 namespace AutoGest.Interfaces
 {
@@ -9,6 +10,7 @@ namespace AutoGest.Interfaces
     {
         private InterfazMain mainWindow;
         private ArbolAVL arbolRepuestos;
+        private Label statusLabel;
 
         public InterfazGR(InterfazMain mainWindow, ArbolAVL arbolRepuestos)
         {
@@ -28,6 +30,10 @@ namespace AutoGest.Interfaces
             labelTitulo.Markup = "<span font='16' weight='bold'>GESTIÓN DE REPUESTOS</span>";
             labelTitulo.SetAlignment(0.5f, 0.5f);
             contentBox.PackStart(labelTitulo, false, false, 10);
+            
+            // Añadir etiqueta de estado para mensajes
+            statusLabel = MessageManager.CreateStatusLabel();
+            contentBox.PackStart(statusLabel, false, false, 10);
             
             // Separador después del título
             HSeparator separator = new HSeparator();
@@ -71,12 +77,10 @@ namespace AutoGest.Interfaces
             buttonVerRepuestos.Add(verRepuestosLabel);
             buttonVerRepuestos.SetSizeRequest(150, 35);
             
-            // Modify the buttonVerRepuestos.Clicked event handler (around line 76-87)
-            
             buttonVerRepuestos.Clicked += delegate {
                 try {
                     if (arbolRepuestos == null) {
-                        MostrarMensaje(mainWindow, "No hay datos de repuestos disponibles", MessageType.Warning);
+                        MessageManager.ShowMessage(statusLabel, "No hay datos de repuestos disponibles", MessageManager.MessageType.Warning);
                         return;
                     }
                     
@@ -92,10 +96,12 @@ namespace AutoGest.Interfaces
                     {
                         textViewRepuestos.Buffer.Text = arbolRepuestos.ObtenerListaPostOrden();
                     }
+                    
+                    MessageManager.ShowMessage(statusLabel, "Lista de repuestos cargada correctamente", MessageManager.MessageType.Info, true);
                 }
                 catch (Exception ex) {
                     Console.WriteLine($"Error al mostrar repuestos: {ex.Message}");
-                    MostrarMensaje(mainWindow, "Error al mostrar los repuestos", MessageType.Error);
+                    MessageManager.ShowMessage(statusLabel, "Error al mostrar los repuestos", MessageManager.MessageType.Error);
                 }
             };
             
@@ -185,17 +191,17 @@ namespace AutoGest.Interfaces
                         entryDetallesEditar.Sensitive = true;
                         entryCostoEditar.Sensitive = true;
                         buttonEditarRepuesto.Sensitive = true;
+                        
+                        MessageManager.ShowMessage(statusLabel, "Repuesto encontrado correctamente", MessageManager.MessageType.Success, true);
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Repuesto no encontrado", MessageType.Warning);
-                        Console.WriteLine("Repuesto no encontrado.");
+                        MessageManager.ShowMessage(statusLabel, "Repuesto no encontrado", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "ID inválido. Ingrese un número.", MessageType.Error);
-                    Console.WriteLine("ID inválido.");
+                    MessageManager.ShowMessage(statusLabel, "ID inválido. Ingrese un número.", MessageManager.MessageType.Error);
                 }
             };
 
@@ -223,12 +229,11 @@ namespace AutoGest.Interfaces
                         entryCostoEditar.Sensitive = false;
                         buttonEditarRepuesto.Sensitive = false;
                         
-                        MostrarMensaje(mainWindow, "Repuesto actualizado exitosamente", MessageType.Info);
+                        MessageManager.ShowMessage(statusLabel, "Repuesto actualizado exitosamente", MessageManager.MessageType.Success);
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Costo inválido. Ingrese un número.", MessageType.Error);
-                        Console.WriteLine("Costo inválido.");
+                        MessageManager.ShowMessage(statusLabel, "Costo inválido. Ingrese un número.", MessageManager.MessageType.Error);
                     }
                 }
             };
@@ -269,30 +274,26 @@ namespace AutoGest.Interfaces
                     LRepuesto* repuesto = arbolRepuestos.Buscar(id);
                     if (repuesto != null)
                     {
-                        using (var dialog = new MessageDialog(mainWindow,
-                            DialogFlags.Modal,
-                            MessageType.Question,
-                            ButtonsType.YesNo,
-                            $"¿Está seguro que desea eliminar el repuesto {GetFixedString(repuesto->Repuesto)} (ID: {id})?"))
-                        {
-                            if (dialog.Run() == (int)ResponseType.Yes)
-                            {
+                        string nombreRepuesto = GetFixedString(repuesto->Repuesto);
+                        
+                        MessageManager.AskConfirmation(
+                            contentBox,
+                            $"¿Está seguro que desea eliminar el repuesto {nombreRepuesto} (ID: {id})?",
+                            () => {
                                 arbolRepuestos.Eliminar(id);
                                 entryIdEliminar.Text = "";
-                                MostrarMensaje(mainWindow, "Repuesto eliminado exitosamente", MessageType.Info);
+                                MessageManager.ShowMessage(statusLabel, "Repuesto eliminado exitosamente", MessageManager.MessageType.Success);
                             }
-                            dialog.Destroy();
-                        }
+                        );
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "Repuesto no encontrado", MessageType.Warning);
+                        MessageManager.ShowMessage(statusLabel, "Repuesto no encontrado", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "ID inválido. Ingrese un número.", MessageType.Error);
-                    Console.WriteLine("ID inválido.");
+                    MessageManager.ShowMessage(statusLabel, "ID inválido. Ingrese un número.", MessageManager.MessageType.Error);
                 }
             };
             
@@ -355,14 +356,12 @@ namespace AutoGest.Interfaces
 
             buttonReporteGeneral.Clicked += delegate {
                 arbolRepuestos.GenerarGrafico("Repuestos.dot");
-                MostrarMensaje(mainWindow, "Reporte general de repuestos generado exitosamente.", MessageType.Info);
-                Console.WriteLine("Reporte general de repuestos generado exitosamente.");
+                MessageManager.ShowMessage(statusLabel, "Reporte general de repuestos generado exitosamente", MessageManager.MessageType.Success);
             };
 
             buttonReportePorCosto.Clicked += delegate {
                 arbolRepuestos.GenerarReportePorCosto();
-                MostrarMensaje(mainWindow, "Reporte por costo generado exitosamente.", MessageType.Info);
-                Console.WriteLine("Reporte por costo generado exitosamente.");
+                MessageManager.ShowMessage(statusLabel, "Reporte por costo generado exitosamente", MessageManager.MessageType.Success);
             };
 
             buttonReporteRangoCosto.Clicked += delegate {
@@ -372,19 +371,16 @@ namespace AutoGest.Interfaces
                     if (minCosto <= maxCosto)
                     {
                         arbolRepuestos.GenerarReportePorRangoCosto(minCosto, maxCosto);
-                        MostrarMensaje(mainWindow, $"Reporte por rango de costo ({minCosto}-{maxCosto}) generado exitosamente.", MessageType.Info);
-                        Console.WriteLine($"Reporte por rango de costo ({minCosto}-{maxCosto}) generado exitosamente.");
+                        MessageManager.ShowMessage(statusLabel, $"Reporte por rango de costo ({minCosto}-{maxCosto}) generado exitosamente", MessageManager.MessageType.Success);
                     }
                     else
                     {
-                        MostrarMensaje(mainWindow, "El costo mínimo debe ser menor o igual al costo máximo.", MessageType.Warning);
-                        Console.WriteLine("El costo mínimo debe ser menor o igual al costo máximo.");
+                        MessageManager.ShowMessage(statusLabel, "El costo mínimo debe ser menor o igual al costo máximo", MessageManager.MessageType.Warning);
                     }
                 }
                 else
                 {
-                    MostrarMensaje(mainWindow, "Los valores de costo deben ser números válidos.", MessageType.Error);
-                    Console.WriteLine("Los valores de costo deben ser números válidos.");
+                    MessageManager.ShowMessage(statusLabel, "Los valores de costo deben ser números válidos", MessageManager.MessageType.Error);
                 }
             };
 
@@ -438,19 +434,6 @@ namespace AutoGest.Interfaces
             centeringBox.PackStart(new Label(""), true, true, 0);
             
             PackStart(centeringBox, true, true, 0);
-        }
-
-        private void MostrarMensaje(Window parent, string mensaje, MessageType tipo)
-        {
-            using (var md = new MessageDialog(parent, 
-                DialogFlags.DestroyWithParent, 
-                tipo, 
-                ButtonsType.Close, 
-                mensaje))
-            {
-                md.Run();
-                md.Destroy();
-            }
         }
 
         private unsafe string GetFixedString(char* fixedStr)

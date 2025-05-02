@@ -1,6 +1,28 @@
 digraph Blockchain {
     node [shape=record, style=filled, fontname="Arial"];
-    Block0 [label="{ INDEX: 0 | TIMESTAMP: 16-04-25::00:31:26 | DATA: [ID: 0, Nombres: , Apellidos: , Correo: , Edad 0,Contraseña: ] | NONCE: 20150 | PREVIOUS HASH: 0000 | HASH: 00007f6acf1f10fee3e930f0a36d8f66c297a811264ec5b5d8fab7f5b2de48e5 }"];
+    Block0 [label="{ INDEX: 0 | TIMESTAMP: 01-05-25::15:31:39 | DATA: [ID: 0, Nombres: , Apellidos: , Correo: , Edad 0,Contraseña: ] | NONCE: 21482 | PREVIOUS HASH: 0000 | HASH: 00006a4e4d5c0df2368a81b7d3f42584bb1bb0c875e1c7a7bb3594cc8169fc22 }"];
     Block0 -> Block1;
-    Block1 [label="{ INDEX: 1 | TIMESTAMP: 16-04-25::00:31:52 | DATA: [ID: 1, Nombres: 1, Apellidos: 1, Correo: 1, Edad 1,Contraseña: 1] | NONCE: 63961 | PREVIOUS HASH: 00007f6acf1f10fee3e930f0a36d8f66c297a811264ec5b5d8fab7f5b2de48e5 | HASH: 000021f0d4ce0edd14bca3e1a9011efa8695e7c9b3c14efee5a3e23c46bc4fc5 }"];
+    Block1 [label="{ INDEX: 1 | TIMESTAMP: 01-05-25::15:31:50 | DATA: [ID: 1, Nombres: Carlos Alberto, Apellidos: Gomez Martinez, Correo: carlos.alberto@usac.com, Edad 20,Contraseña: CarlosMartinez] | NONCE: 24271 | PREVIOUS HASH: 00006a4e4d5c0df2368a81b7d3f42584bb1bb0c875e1c7a7bb3594cc8169fc22 | HASH: 00000001116687a6f911056a70fe6d1ace7b90e1b3934281644d0c386671f021 }"];
+    Block1 -> Block2;
+    Block2 [label="{ INDEX: 2 | TIMESTAMP: 01-05-25::15:31:51 | DATA: [ID: 2, Nombres: Ana Lucia, Apellidos: Martinez Lopez, Correo: ana.lucia@usac.com, Edad 20,Contraseña: AnaLopez] | NONCE: 11130 | PREVIOUS HASH: 00000001116687a6f911056a70fe6d1ace7b90e1b3934281644d0c386671f021 | HASH: 00009b7b6d10915ef6b3859a721cfbe67de9cdff9afb2379cf846b11f6be4adb }"];
+    Block2 -> Block3;
+    Block3 [label="{ INDEX: 3 | TIMESTAMP: 01-05-25::15:31:51 | DATA: [ID: 3, Nombres: Luis Enrique, Apellidos: Perez Ramirez, Correo: luis.enrique@usac.com, Edad 20,Contraseña: LuisRamirez] | NONCE: 264762 | PREVIOUS HASH: 00009b7b6d10915ef6b3859a721cfbe67de9cdff9afb2379cf846b11f6be4adb | HASH: 0000287006ccc5ace3578e62004e481b578965246b270d0e563452869808532a }"];
+    Block3 -> Block4;
+    Block4 [label="{ INDEX: 4 | TIMESTAMP: 01-05-25::15:31:56 | DATA: [ID: 4, Nombres: Marta Isabel, Apellidos: Lopez Perez, Correo: marta.isabel@usac.com, Edad 20,Contraseña: MartaPerez] | NONCE: 24874 | PREVIOUS HASH: 0000287006ccc5ace3578e62004e481b578965246b270d0e563452869808532a | HASH: 00001808a10f35bd33bc46c3ae5d0350816a7cbcef602afca57b28f6258ab6cb }"];
+    Block4 -> Block5;
+    Block5 [label="{ INDEX: 5 | TIMESTAMP: 01-05-25::15:31:56 | DATA: [ID: 5, Nombres: Juan Carlos, Apellidos: Hernandez Lopez, Correo: juan.carlos@usac.com, Edad 20,Contraseña: JuanLopez] | NONCE: 40107 | PREVIOUS HASH: 00001808a10f35bd33bc46c3ae5d0350816a7cbcef602afca57b28f6258ab6cb | HASH: 00004e5d59f72e1c5a6a269529ce154f192673148cbc166ae435dfbf73206527 }"];
+    Block5 -> Block6;
+    Block6 [label="{ INDEX: 6 | TIMESTAMP: 01-05-25::15:31:57 | DATA: [ID: 6, Nombres: Maria Fernanda, Apellidos: Garcia Lopez, Correo: maria.fernanda@usac.com, Edad 20,Contraseña: MariaLopez] | NONCE: 33273 | PREVIOUS HASH: 00004e5d59f72e1c5a6a269529ce154f192673148cbc166ae435dfbf73206527 | HASH: 0000ac15fac08c2f17835f684e94e2a22c27c619cfa89f44c9f1cdcfa178f339 }"];
+    Block6 -> Block7;
+    Block7 [label="{ INDEX: 7 | TIMESTAMP: 01-05-25::15:31:58 | DATA: [ID: 7, Nombres: Pedro Pablo, Apellidos: Rodriguez Torres, Correo: pedro.pablo@usac.com, Edad 20,Contraseña: PedroTorres] | NONCE: 12390 | PREVIOUS HASH: 0000ac15fac08c2f17835f684e94e2a22c27c619cfa89f44c9f1cdcfa178f339 | HASH: 0000d48aa2b240a247bd36bcc8f307e04097686b61194746b74efef0a60c779c }"];
+    Block7 -> Block8;
+    Block8 [label="{ INDEX: 8 | TIMESTAMP: 01-05-25::15:31:59 | DATA: [ID: 8, Nombres: Laura Isabel, Apellidos: Sanchez Morales, Correo: laura.isabel@usac.com, Edad 20,Contraseña: LauraMorales] | NONCE: 33435 | PREVIOUS HASH: 0000d48aa2b240a247bd36bcc8f307e04097686b61194746b74efef0a60c779c | HASH: 0000da9f7ea1a4252724712f5d7a26a6d9179e11860d5bac32b3f6a94c37887f }"];
+    Block8 -> Block9;
+    Block9 [label="{ INDEX: 9 | TIMESTAMP: 01-05-25::15:32:00 | DATA: [ID: 9, Nombres: Rafael Alejandro, Apellidos: Ramirez Diaz, Correo: rafael.alejandro@usac.com, Edad 20,Contraseña: RafaelDiaz] | NONCE: 23815 | PREVIOUS HASH: 0000da9f7ea1a4252724712f5d7a26a6d9179e11860d5bac32b3f6a94c37887f | HASH: 00006ab4253c2c5375776626df5c4f6d4d6f93d785bc054fecdc78bbbc97cc58 }"];
+    Block9 -> Block10;
+    Block10 [label="{ INDEX: 10 | TIMESTAMP: 01-05-25::15:32:00 | DATA: [ID: 10, Nombres: Isabel Cristina, Apellidos: Diaz Lopez, Correo: isabel.cristina@usac.com, Edad 20,Contraseña: IsabelLopez] | NONCE: 133167 | PREVIOUS HASH: 00006ab4253c2c5375776626df5c4f6d4d6f93d785bc054fecdc78bbbc97cc58 | HASH: 00002ba609f3bdb6468c244f799260a8be4037883e2b1d04fe570cf25b0c7003 }"];
+    Block10 -> Block11;
+    Block11 [label="{ INDEX: 11 | TIMESTAMP: 01-05-25::15:32:03 | DATA: [ID: 1, Nombres: Carlos Juan, Apellidos: Garcia Martinez, Correo: carlos.alberto@usac.com, Edad 20,Contraseña: CarlosMartinez] | NONCE: 160339 | PREVIOUS HASH: 00002ba609f3bdb6468c244f799260a8be4037883e2b1d04fe570cf25b0c7003 | HASH: 000092d5e256b6ef196d5e01a0027ed7ffcfe06c81e87df4393b5a690783a9c6 }"];
+    Block11 -> Block12;
+    Block12 [label="{ INDEX: 12 | TIMESTAMP: 01-05-25::15:32:06 | DATA: [ID: 11, Nombres: Carlos Juan, Apellidos: Garcia Martinez, Correo: carlos.alberto@usac.com, Edad 20,Contraseña: CarlosMartinez] | NONCE: 37685 | PREVIOUS HASH: 000092d5e256b6ef196d5e01a0027ed7ffcfe06c81e87df4393b5a690783a9c6 | HASH: 0000f4acb4d97cd8091b121843a181aa11cd7e80f44220f0b6e508d5610118a7 }"];
 }
